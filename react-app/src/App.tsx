@@ -1,16 +1,27 @@
-import Greeting from "./pages/greeting";
-import UserCard from "./pages/UserCard";
-
+import { Routes, Route, Link } from "react-router-dom";
+import Home from "./pages/Home";
+import Counter from "./pages/Counter";
+import UseContext from "./pages/UseContext";
+import Form from "./pages/Form";
 export default function App() {
   return (
     <div>
-      <h1>Hello World</h1>
+      <nav>
+        <Link to="/home"> Home </Link>
 
-      <Greeting name={"jay"} age={45} />
+        <Link to="/counter"> Counter </Link>
 
-      <UserCard userName={"user1"} age={45} status={"active"} />
+        <Link to="/form"> Form </Link>
 
-      <UserCard userName={"user2"} status={"inactive"} />
+        <Link to="/UseContext"> Hook UseContext </Link>
+      </nav>
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/counter" element={<Counter />} />
+        <Route path="/form" element={<Form />} />
+        <Route path="/UseContext" element={<UseContext />} />
+      </Routes>
     </div>
   );
 }

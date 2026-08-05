@@ -1,12 +1,9 @@
 import { useState } from "react";
 
-
 type GreetingProps = {
   name: string;
   age?: number;
 };
-
-
 
 export default function Greeting({ name, age }: GreetingProps) {
   return (
@@ -18,7 +15,7 @@ export default function Greeting({ name, age }: GreetingProps) {
 }
 
 function NameInput() {
-  function handleChange(e : React.ChangeEvent<HTMLInputElement>) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     console.log(e.target.value);
   }
 
@@ -26,5 +23,3 @@ function NameInput() {
 }
 
 NameInput();
-
-
