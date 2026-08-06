@@ -20,7 +20,7 @@ export default function UseContext() {
         <h1>{user.name}</h1>
         <p>Age: {user.age}</p>
 
-        <ComponentB />
+        <ComponentB/>
       </UserContext.Provider>
     </>
   );
@@ -40,9 +40,11 @@ function ComponentB() {
 
 function ComponentC() {
   const user = useContext(UserContext);
-
+  
   return (
     <>
+     
+
       <h1>Component C</h1>
       <p>Name: {user?.name}</p>
       <p>Age: {user?.age}</p>
