@@ -1,4 +1,3 @@
-import React from "react";
 import { useAppDispatch } from "../store";
 import { login } from "../store/userSlice";
 

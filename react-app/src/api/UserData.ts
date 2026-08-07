@@ -3,7 +3,6 @@ export interface User {
   name: string;
   email: string;
 }
-
 function getUserFromLocalStorage() {
   let dataString = localStorage.getItem("userData");
   let data = dataString ? JSON.parse(dataString) : null;
