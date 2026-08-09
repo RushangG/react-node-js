@@ -13,7 +13,7 @@ export default function LoginForm() {
 
     // Dispatch the data to the global store
     dispatch(login(mockUserData));
-  };
+  }; 
 
   return (
     <div style={{ border: "2px solid black", padding: "15px", margin: "10px" }}>

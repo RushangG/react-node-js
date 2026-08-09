@@ -3,10 +3,16 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserData, deleteUser } from "../../api/UserData";
 import { type User } from "../../api/UserData";
+import { useAppSelector } from "../../store";
+import { logoutUser } from "../../store/userSlice";
+import { useDispatch } from "react-redux";
+
 
 export default function UserList() {
   const [users, setUsers] = useState<User[]>([]);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const userProfile = useAppSelector((state) => state.user.profile);
 
   useEffect(() => {
     fetchUsers();
@@ -32,6 +38,11 @@ export default function UserList() {
     fetchUsers(); // Refresh the user list after deletion
   }
 
+  function handleLogout() {
+    dispatch(logoutUser());
+    navigate("/LoginAuth");
+  }
+
   console.log("UserList users:", users);
 
   return (
@@ -39,11 +50,21 @@ export default function UserList() {
       {/* Header with button side-by-side */}
       <header className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">User List</h1>
-        <button
+
+        <p>  {userProfile ? "Current User : " + userProfile?.name + " " + userProfile?.email : " " } </p>
+ 
+        <button 
           onClick={handleAddUser}
           className="bg-blue-500 text-white px-4 py-2 rounded text-sm font-medium"
         >
           Add User
+        </button>
+
+        <button className="bg-red-500 text-white px-4 py-2 rounded text-sm font-medium"
+          onClick={handleLogout}
+
+        >
+          Logout
         </button>
       </header>
 

@@ -2,6 +2,7 @@ export interface User {
   id: number;
   name: string;
   email: string;
+  password?:string;
 }
 function getUserFromLocalStorage() {
   let dataString = localStorage.getItem("userData");
@@ -20,12 +21,18 @@ export function getUserData() {
   return getUserFromLocalStorage();
 }
 
-export function addUserData(name: string, email: string): User {
+export function getUserByEmail(email: string) {
+  let UserData: User[] = getUserFromLocalStorage() || [];
+  return UserData.find((user) => user.email === email);
+}
+
+export function addUserData(name: string, email: string, password?:string): User {
   let UserData: User[] = getUserFromLocalStorage() || [];
   const newUser = {
     id: new Date().getTime(),
     name,
     email,
+    password
   };
   UserData.push(newUser);
   setUserToLocalStorage(UserData);
