@@ -10,6 +10,8 @@ import UserForm from "./pages/UserList/UserForm";
 import Navbar from "./store/navbar";
 import LoginForm from "./store/login";
 import HomeRedux from "./store/home-redux";
+import Login from "./pages/authPage/Login";
+import Register from "./pages/authPage/Register";
 export default function App() {
   return (
     <div>
@@ -30,7 +32,11 @@ export default function App() {
         <Link to="/Navbar"> Navbar </Link>
         <Link to="/Login"> Login </Link>
 
+        
         <Link to="/homeRedux"> Home Redux </Link>
+
+        <Link to="/LoginAuth"> Login auth </Link>
+        <Link to="/Register"> Register auth</Link>
       </nav>
 
       <Routes>
@@ -45,8 +51,9 @@ export default function App() {
         <Route path="/UserForm" element={<UserForm />} />
         <Route path="/Login" element={<LoginForm />} />
         <Route path="/Navbar" element={<Navbar />} />
-
+        <Route path="/LoginAuth" element={<Login />} />
         <Route path="/homeRedux" element={<HomeRedux />} />
+        <Route path="/Register" element={<Register />} />
       </Routes>
     </div>
   );
