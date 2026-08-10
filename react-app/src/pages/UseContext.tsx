@@ -13,6 +13,7 @@ export default function UseContext() {
   useEffect(() => {
     setUser({ name: "John11", age: 20 });
   }, []); 
+   
   
   return (
     <>
