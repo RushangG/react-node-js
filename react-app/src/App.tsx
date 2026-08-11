@@ -12,14 +12,16 @@ import LoginForm from "./store/login";
 import HomeRedux from "./store/home-redux";
 import Login from "./pages/authPage/Login";
 import Register from "./pages/authPage/Register";
+import UseFormHook from "./pages/UseFormHook";
+
 export default function App() {
   return (
     <div>
       <nav className="bg-gray-800 text-white p-4 flex space-x-4">
-        {/* <Link to="/home"> Home </Link>
+        <Link to="/home"> Home </Link>
 
-        <Link to="/counter"> Counter </Link>
-
+        {/* <Link to="/counter"> Counter </Link>
+ 
         <Link to="/form"> Form </Link>
 
         <Link to="/UseContext"> Hook UseContext </Link>
@@ -32,11 +34,11 @@ export default function App() {
         <Link to="/Navbar"> Navbar </Link>
         <Link to="/Login"> Login </Link>
 
-        
         <Link to="/homeRedux"> Home Redux </Link>
 
         <Link to="/LoginAuth"> Login auth </Link>
         <Link to="/Register"> Register auth</Link>
+        <Link to="/UseFormHook"> UseFormHook </Link>
       </nav>
 
       <Routes>
@@ -54,6 +56,7 @@ export default function App() {
         <Route path="/LoginAuth" element={<Login />} />
         <Route path="/homeRedux" element={<HomeRedux />} />
         <Route path="/Register" element={<Register />} />
+        <Route path="/UseFormHook" element={<UseFormHook />} />
       </Routes>
     </div>
   );

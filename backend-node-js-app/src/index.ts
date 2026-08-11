@@ -11,6 +11,8 @@ const port = 3000;
 
 app.use(express.json());
 
+
+  
 app.use(`${BaseUrl}/auth`, authRoutes);
 app.use(`${BaseUrl}/users`, userRoutes);
 
