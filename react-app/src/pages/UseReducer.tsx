@@ -5,7 +5,9 @@ import { useState } from "react";
 export default function UseReducer() {
   const initialCount = { count1: 0, count2: 0 };
 
-  function counterReducer( state: { count1: number; count2: number },action: { type1: string; type2: string },
+  function counterReducer(
+    state: { count1: number; count2: number },
+    action: { type1: string; type2: string },
   ) {
     switch (action.type1) {
       case "increment":
@@ -27,9 +29,25 @@ export default function UseReducer() {
         <h1>UseReducer Counter</h1>
         <p>Count 1: {counter.count1}</p>
         <p>Count 2: {counter.count2}</p>
-        <button onClick={() => counterAction({ type1: "increment", type2: "increment" })}>+</button>
-        <button onClick={() => counterAction({ type1: "decrement", type2: "decrement" })}>-</button>
-        <button onClick={() => counterAction({ type1: "reset", type2: "reset" })}>Reset</button>
+        <button
+          onClick={() =>
+            counterAction({ type1: "increment", type2: "increment" })
+          }
+        >
+          +
+        </button>
+        <button
+          onClick={() =>
+            counterAction({ type1: "decrement", type2: "decrement" })
+          }
+        >
+          -
+        </button>
+        <button
+          onClick={() => counterAction({ type1: "reset", type2: "reset" })}
+        >
+          Reset
+        </button>
       </div>
     </>
   );

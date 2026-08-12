@@ -10,6 +10,7 @@ const UserContext = createContext<User | null>(null);
 
 export default function UseContext() {
   const [user, setUser] = useState({ name: "", age: 0 });
+
   useEffect(() => {
     setUser({ name: "John11", age: 20 });
   }, []); 

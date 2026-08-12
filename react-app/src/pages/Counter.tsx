@@ -1,24 +1,32 @@
-import { useState } from "react";
+import { useState } from 'react';
+
+interface AppState {
+  user: {
+    name: string;
+    profile: {
+      age: number;
+      theme: string;
+    };
+  };
+}
 
 export default function Counter() {
-  const [count, setCount] = useState(0);
+  const [data, setData] = useState<AppState>({
+    user: { name: "Alex", profile: { age: 25, theme: "dark" } }
+  });
 
-  function increment() {
-    setCount(count + 1);
-    setCount(count + 2);
-    setCount(count + 3);
-  }
+  const birthdayStateUpdate = () => {
+    setData(prev => ({
+      ...prev,                  // 1. Copy root level
+      user: {
+        ...prev.user,           // 2. Copy user level
+        profile: {
+          ...prev.user.profile, // 3. Copy profile level
+          age: prev.user.profile.age + 1 // 4. Finally mutate value!
+        }
+      }
+    }));
+  };
 
-  function decrement() {
-    setCount(count - 1);
-  }
-
-  return (
-    <div>
-      <h1>{count}</h1>
-
-      <button onClick={increment}>Click Increment</button>
-      <button onClick={decrement}>Click Decrement</button>
-    </div>
-  );
+  return <button onClick={birthdayStateUpdate}>Age: {data.user.profile.age}</button>;
 }
