@@ -21,7 +21,6 @@ export default function UseContext() {
       <UserContext.Provider value={{ name: user.name, age: user.age }}>
         <h1>{user.name}</h1>
         <p>Age: {user.age}</p>
-
         <ComponentB/>
       </UserContext.Provider>
     </>

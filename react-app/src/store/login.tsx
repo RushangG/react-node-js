@@ -1,5 +1,6 @@
-import { useAppDispatch } from "../store";
+import { useAppDispatch, type AppDispatch } from "../store";
 import { login } from "../store/userSlice";
+import { loginUser } from "../store/userSlice";
 
 export default function LoginForm() {
   const dispatch = useAppDispatch();
@@ -12,8 +13,8 @@ export default function LoginForm() {
     };
 
     // Dispatch the data to the global store
-    dispatch(login(mockUserData));
-  }; 
+    dispatch(loginUser(mockUserData) as AppDispatch);
+  };
 
   return (
     <div style={{ border: "2px solid black", padding: "15px", margin: "10px" }}>
@@ -24,3 +25,4 @@ export default function LoginForm() {
     </div>
   );
 }
+   

@@ -1,4 +1,11 @@
-import { Routes, Route, Link, Navigate } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Link,
+  Navigate,
+  Outlet,
+  NavLink,
+} from "react-router-dom";
 import Home from "./pages/Home";
 import Counter from "./pages/Counter";
 import UseContext from "./pages/UseContext";
@@ -14,13 +21,92 @@ import Login from "./pages/authPage/Login";
 import Register from "./pages/authPage/Register";
 import UseFormHook from "./pages/UseFormHook";
 import Name from "./pages/Name";
-import ProtectedRouteLayer from "./component/ProtectedRouteLayer";
 
-export default function App() {
+import ProtectedRouteLayer from "./component/ProtectedRouteLayer";
+import UseBlocker from "./pages/UserList/UseBlocker";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <RootLayout />,
+    children: [
+      {
+        index: true,
+        element: <Navigate to="/UserList" />,
+      },
+      {
+        path: "/home",
+        element: <Home />,
+      },
+      {
+        path: "/counter",
+        element: <Counter />,
+      },
+      {
+        path: "/form",
+        element: <Form />,
+      },
+      {
+        path: "/UseContext",
+        element: <UseContext />,
+      },
+      {
+        path: "/UseRef",
+        element: <UseRef />,
+      },
+      {
+        path: "/UseReducer",
+        element: <UseReducer />,
+      },
+      {
+        path: "/UserForm",
+        element: <UserForm />,
+      },
+      {
+        path: "/Login",
+        element: <LoginForm />,
+      },
+      {
+        path: "/Navbar",
+        element: <Navbar />,
+      },
+      {
+        path: "/LoginAuth",
+        element: <Login />,
+      },
+      {
+        path: "/homeRedux",
+        element: <HomeRedux />,
+      },
+      {
+        path: "/Register",
+        element: <Register />,
+      },
+      {
+        path: "/UseFormHook",
+        element: <UseFormHook />,
+      },
+      {
+        path: "/Name",
+        element: <Name />,
+      },
+      {
+        path: "/UseBlocker",
+        element: <UseBlocker />,
+      },
+      {
+        element: <ProtectedRouteLayer />,
+        children: [{ path: "/UserList", element: <UserList /> }],
+      },
+    ],
+  },
+]);
+
+function RootLayout() {
   return (
     <div>
       <nav className="bg-gray-800 text-white p-4 flex space-x-4">
-        <Link to="/home"> Home </Link>
+        <NavLink to="/home"> Home </NavLink>
 
         <Link to="/counter"> Counter </Link>
 
@@ -42,30 +128,17 @@ export default function App() {
         <Link to="/Register"> Register auth</Link>
         <Link to="/UseFormHook"> UseFormHook </Link>
         <Link to="/Name"> Name </Link>
+
+        <Link to="/UseBlocker"> User Blocker </Link>
       </nav>
 
-      <Routes>
-        <Route path="/" element={<Navigate to="/UserList" />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/counter" element={<Counter />} />
-        <Route path="/form" element={<Form />} />
-        <Route path="/UseContext" element={<UseContext />} />
-        <Route path="/UseRef" element={<UseRef />} />
-        <Route path="/UseReducer" element={<UseReducer />} />
-        {/* <Route path="/UserList" element={<UserList />} /> */}
-        <Route path="/UserForm" element={<UserForm />} />
-        <Route path="/Login" element={<LoginForm />} />
-        <Route path="/Navbar" element={<Navbar />} />
-        <Route path="/LoginAuth" element={<Login />} />
-        <Route path="/homeRedux" element={<HomeRedux />} />
-        <Route path="/Register" element={<Register />} />
-        <Route path="/UseFormHook" element={<UseFormHook />} />
-        <Route path="/Name" element={<Name />} />
-
-        <Route element={<ProtectedRouteLayer />}>
-          <Route path="/UserList" element={<UserList />} />
-        </Route>
-      </Routes>
+      <main>
+        <Outlet />
+      </main>
     </div>
   );
+}
+
+export default function App() {
+  return <RouterProvider router={router} />;
 }
