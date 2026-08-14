@@ -2,9 +2,29 @@ import Greeting from "./Greeting";
 import UserCard from "./UserCard";
 import HOC from "../component/HOC";
 import useCustomHook from "../component/useCustomHook";
+import { useLoaderData } from "react-router-dom";
+
+export async function LoadData() {
+  try {
+    const response = await fetch("https://jsonplaceholder.typicode.com/users");
+    const jsonData = await response.json();
+    setTimeout(() => {
+      console.log("Data fetched in LoadData function:", jsonData);
+      return jsonData;
+    }, 5000);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  }
+}
+
 function Home() {
+  const PostData = useLoaderData();
+
+  console.log("PostData in Home component:", typeof PostData, PostData);
+
   const [data, time] = useCustomHook(
-    "https://jsonplaceholder.typicode.com/todos",
+    "https://jsonplaceholder.typicode.com/users",
   );
 
   console.log("Data in Home component:", typeof data, data);
@@ -22,12 +42,12 @@ function Home() {
             {Object.entries(data).map(([key, item]: [string, any]) => (
               <li key={key}>
                 <p>ID: {item.id}</p>
-                <p>Title: {item.title}</p>
+                <p>Name: {item.name}</p>
               </li>
             ))}
           </ul>
         ) : (
-          <p>Loading data...</p>
+          <p></p>
         )}
       </div>
       <Greeting name={"jay"} age={45} />
@@ -39,4 +59,4 @@ function Home() {
   );
 }
 
-export default HOC(Home);
+export default Home;

@@ -6,7 +6,7 @@ import {
   Outlet,
   NavLink,
 } from "react-router-dom";
-import Home from "./pages/Home";
+import Home, { LoadData } from "./pages/Home";
 import Counter from "./pages/Counter";
 import UseContext from "./pages/UseContext";
 import Form from "./pages/Form";
@@ -22,13 +22,21 @@ import Register from "./pages/authPage/Register";
 import UseFormHook from "./pages/UseFormHook";
 import Name from "./pages/Name";
 
+import ProductPage, {
+  ProductLoader,
+  WishListAction,
+} from "./pages/Product/ProductPage";
+
 import ProtectedRouteLayer from "./component/ProtectedRouteLayer";
 import UseBlocker from "./pages/UserList/UseBlocker";
-
+import NotFoundPage from "./component/NotFound";
+import InputForm from "./pages/Forms/InputForm";
+import { action as InputAction } from "./pages/Forms/InputForm";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
+    errorElement: <NotFoundPage />,
     children: [
       {
         index: true,
@@ -37,6 +45,7 @@ const router = createBrowserRouter([
       {
         path: "/home",
         element: <Home />,
+        loader: LoadData,
       },
       {
         path: "/counter",
@@ -91,8 +100,19 @@ const router = createBrowserRouter([
         element: <Name />,
       },
       {
+        path: "/InputForm",
+        Component: InputForm,
+        action: InputAction,
+      },
+      {
         path: "/UseBlocker",
         element: <UseBlocker />,
+      },
+      {
+        path: "/ProductPage",
+        element: <ProductPage />,
+        loader: ProductLoader,
+        action: WishListAction,
       },
       {
         element: <ProtectedRouteLayer />,
@@ -130,6 +150,8 @@ function RootLayout() {
         <Link to="/Name"> Name </Link>
 
         <Link to="/UseBlocker"> User Blocker </Link>
+        <Link to="/InputForm"> Input Form </Link>
+        <Link to="/ProductPage"> Product Page </Link>
       </nav>
 
       <main>

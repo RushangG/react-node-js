@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 
-export default function useCustomHook(url: string) {
+export default function  useCustomHook(url: string) {
   const [data, setData] = useState();
   const [time, setTime] = useState(0);
   const startTime = performance.now();
