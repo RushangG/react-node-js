@@ -8,6 +8,7 @@ export default function Navbar() {
   console.log("userProfile in Navbar:", userProfile);
 
   const dispatch = useAppDispatch();
+  
 
   return (
     <div
@@ -20,7 +21,7 @@ export default function Navbar() {
         alignItems: "center",
       }}
     >
-      <h3>Component 2: Global Header Navbar</h3>
+      <h3>Component 2: Global Header</h3>
 
       {userProfile ? (
         <div style={{ textAlign: "right" }}>

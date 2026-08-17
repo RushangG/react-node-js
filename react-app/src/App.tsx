@@ -32,10 +32,18 @@ import UseBlocker from "./pages/UserList/UseBlocker";
 import NotFoundPage from "./component/NotFound";
 import InputForm from "./pages/Forms/InputForm";
 import { action as InputAction } from "./pages/Forms/InputForm";
+import DashboardLayout from "./pages/useOutletContext/DashboardLayout";
+import AnalyticsPage from "./pages/useOutletContext/AnalyticsPage";
+
+import ProductCard from "./pages/useViewTransition.tsx/ProductCard";
+import ProductDetails from "./pages/useViewTransition.tsx/ProductDetails";
+import BreadCrumbs from "./component/BreadCrumbs";
+import ProductAdd from "./pages/ProductPage/ProductAdd";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
+    handle: { path: "RootLayout" },
     errorElement: <NotFoundPage />,
     children: [
       {
@@ -54,6 +62,10 @@ const router = createBrowserRouter([
       {
         path: "/form",
         element: <Form />,
+      },
+      {
+        path: "/ProductAdd",
+        element: <ProductAdd />,
       },
       {
         path: "/UseContext",
@@ -118,14 +130,35 @@ const router = createBrowserRouter([
         element: <ProtectedRouteLayer />,
         children: [{ path: "/UserList", element: <UserList /> }],
       },
+      {
+        element: <DashboardLayout />,
+        handle: { path: "DashboardLayout" },
+        children: [
+          {
+            index: true,
+            path: "/AnalyticsPage",
+            handle: { path: "AnalyticsPage" },
+            element: <AnalyticsPage />,
+          },
+        ],
+      },
+
+      {
+        path: "/ProductCard",
+        element: <ProductCard />,
+      },
+      {
+        path: "ProductDetails/:id",
+        element: <ProductDetails />,
+      },
     ],
   },
 ]);
 
 function RootLayout() {
   return (
-    <div>
-      <nav className="bg-gray-800 text-white p-4 flex space-x-4">
+    <div className="flex h-screen bg-gray-100 flex flex-col">
+      <nav className="bg-gray-800 text-white p-4 flex space-x-4 ">
         <NavLink to="/home"> Home </NavLink>
 
         <Link to="/counter"> Counter </Link>
@@ -152,9 +185,14 @@ function RootLayout() {
         <Link to="/UseBlocker"> User Blocker </Link>
         <Link to="/InputForm"> Input Form </Link>
         <Link to="/ProductPage"> Product Page </Link>
+        <Link to="/AnalyticsPage"> Analytics Page </Link>
+        <Link to="/ProductCard"> Product Card </Link>
+
+        <Link to="/ProductAdd"> Product Add </Link>
       </nav>
 
-      <main>
+      <main className="flex-1 p-4">
+        <BreadCrumbs />
         <Outlet />
       </main>
     </div>
