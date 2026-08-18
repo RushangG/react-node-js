@@ -33,18 +33,21 @@ import NotFoundPage from "./component/NotFound";
 import InputForm from "./pages/Forms/InputForm";
 import { action as InputAction } from "./pages/Forms/InputForm";
 import DashboardLayout from "./pages/useOutletContext/DashboardLayout";
-import AnalyticsPage from "./pages/useOutletContext/AnalyticsPage";
 
 import ProductCard from "./pages/useViewTransition.tsx/ProductCard";
 import ProductDetails from "./pages/useViewTransition.tsx/ProductDetails";
 import BreadCrumbs from "./component/BreadCrumbs";
-import ProductAdd from "./pages/ProductPage/ProductAdd";
+import ProductDashboard from "./pages/ProductPage/ProductDashboard";
+
+let ProductAddPath = "./pages/ProductPage/ProductAdd";
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
     handle: { path: "RootLayout" },
     errorElement: <NotFoundPage />,
+    // ErrorBoundary: NotFoundPage,
     children: [
       {
         index: true,
@@ -65,8 +68,17 @@ const router = createBrowserRouter([
       },
       {
         path: "/ProductAdd",
-        element: <ProductAdd />,
+        lazy: () =>
+          import(ProductAddPath).then((module) => ({
+            Component: module.default,
+          })),
+        handle: { path: "ProductAdd" },
       },
+      {
+        path: "/ProductDashboard",
+        element: <ProductDashboard />,
+      },
+
       {
         path: "/UseContext",
         element: <UseContext />,
@@ -135,10 +147,15 @@ const router = createBrowserRouter([
         handle: { path: "DashboardLayout" },
         children: [
           {
-            index: true,
             path: "/AnalyticsPage",
+            lazy: () =>
+              import("./pages/useOutletContext/AnalyticsPage").then(
+                (module) => ({
+                  Component: module.default,
+                }),
+              ),
+
             handle: { path: "AnalyticsPage" },
-            element: <AnalyticsPage />,
           },
         ],
       },
@@ -147,6 +164,7 @@ const router = createBrowserRouter([
         path: "/ProductCard",
         element: <ProductCard />,
       },
+
       {
         path: "ProductDetails/:id",
         element: <ProductDetails />,
@@ -187,7 +205,9 @@ function RootLayout() {
         <Link to="/ProductPage"> Product Page </Link>
         <Link to="/AnalyticsPage"> Analytics Page </Link>
         <Link to="/ProductCard"> Product Card </Link>
-
+        <Link to="/ProductDetails/1"> Product Details </Link>
+        <span> | </span>
+        <Link to="/ProductDashboard"> Product Dashboard </Link>
         <Link to="/ProductAdd"> Product Add </Link>
       </nav>
 

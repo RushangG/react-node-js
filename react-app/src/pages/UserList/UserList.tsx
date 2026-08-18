@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { getUserData, deleteUser } from "../../api/UserData";
 import { type User } from "../../api/UserData";
 import { useAppSelector } from "../../store";
 import { logoutUser } from "../../store/userSlice";
 import { useDispatch } from "react-redux";
-
 
 export default function UserList() {
   const [users, setUsers] = useState<User[]>([]);
@@ -14,14 +13,7 @@ export default function UserList() {
   const dispatch = useDispatch();
   const userProfile = useAppSelector((state) => state.user.profile);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  function fetchUsers() {
-    const storedUsers = getUserData();
-    setUsers(storedUsers);
-  }
+  const [searchParams, setSearchParams] = useSearchParams();
 
   function handleAddUser() {
     // Navigate to the UserForm component
@@ -43,7 +35,39 @@ export default function UserList() {
     navigate("/LoginAuth");
   }
 
-  console.log("UserList users:", users);
+  function fetchUsers() {
+    const allUsers = getUserData();
+    setUsers(allUsers);
+  }
+
+  // console.log("UserList users:", users);
+  function handleSerchChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const searchTerm = e.target.value;
+
+    if (searchTerm.trim() !== "") {
+      setSearchParams({ search: searchTerm });
+    } else {
+      setSearchParams({});
+    }
+  }
+
+  useEffect(() => {
+    const allUsers = getUserData();
+    let searchTerm = searchParams.get("search")?.toLowerCase() || "";
+    if (searchTerm !== "") {
+      const filteredUsers = allUsers.filter((user: User) => {
+        return (
+          user.name.toLowerCase().includes(searchTerm) ||
+          user.email.toLowerCase().includes(searchTerm)
+        );
+      });
+      setUsers(filteredUsers);
+      console.log("Filtered Users:", filteredUsers);
+    } else {
+      setUsers(allUsers);
+      console.log("Fetched Users:", allUsers);
+    }
+  }, [searchParams]);
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -51,18 +75,31 @@ export default function UserList() {
       <header className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">User List</h1>
 
-        <p>  {userProfile ? "Current User : " + userProfile?.name + " " + userProfile?.email : " " } </p>
- 
-        <button 
+        <input
+          type="text"
+          placeholder="Search users..."
+          value={searchParams.get("search") || ""}
+          onChange={handleSerchChange}
+          className="border border-gray-300 rounded-md p-2 w-32"
+        />
+
+        <p>
+          {" "}
+          {userProfile
+            ? "Current User : " + userProfile?.name + " " + userProfile?.email
+            : " "}{" "}
+        </p>
+
+        <button
           onClick={handleAddUser}
           className="bg-blue-500 text-white px-4 py-2 rounded text-sm font-medium"
         >
           Add User
         </button>
 
-        <button className="bg-red-500 text-white px-4 py-2 rounded text-sm font-medium"
+        <button
+          className="bg-red-500 text-white px-4 py-2 rounded text-sm font-medium"
           onClick={handleLogout}
-
         >
           Logout
         </button>

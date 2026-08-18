@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { addUserData, updateUserData, getUserData } from "../../api/UserData";
 import { type User } from "../../api/UserData";
 // import { useParams } from "react-router-dom";
@@ -10,6 +10,8 @@ export default function UserForm() {
   const location = useLocation();
 
   const editId = location.state?.userId;
+
+ 
 
   //   const { userId } = useParams<{ userId: string }>();
   //   let editId = userId ? Number(userId) : undefined;

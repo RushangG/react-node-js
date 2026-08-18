@@ -5,9 +5,16 @@ import {
   useController,
   type UseControllerProps,
 } from "react-hook-form";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Input } from "@mui/material";
 import Select from "react-select";
-type ProductFormValues = {
+import {
+  getProductById,
+  addProductData,
+  updateProductData,
+} from "../../api/ProductData";
+
+export type ProductFormValues = {
   name: string;
   price: number;
   stock: number;
@@ -16,11 +23,16 @@ type ProductFormValues = {
 };
 
 export default function ProductAdd() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const editId = location.state?.productId;
+
   const {
     register,
     handleSubmit,
     control,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ProductFormValues>({
     defaultValues: {
@@ -32,7 +44,30 @@ export default function ProductAdd() {
     },
   });
 
+  if (editId) {
+    const storedProducts = getProductById(editId);
+
+    if (storedProducts) {
+      setValue("name", storedProducts.name);
+      setValue("price", storedProducts.price);
+      setValue("stock", storedProducts.stock);
+      setValue("category", {
+        value: storedProducts.category,
+        label: storedProducts.category,
+      });
+      setValue("supplierNote", storedProducts.supplierNote);
+    }
+  }
+
   const formSubmit: SubmitHandler<ProductFormValues> = async (data) => {
+    if (editId) {
+      // Handle edit logic if needed
+      updateProductData(editId, data);
+      console.log("Product updated:", data);
+    } else {
+      addProductData({ product: data });
+    }
+    navigate("/ProductDashboard");
     console.log("Form Data:", data);
     reset();
   };
@@ -90,6 +125,7 @@ export default function ProductAdd() {
           </label>
           <input
             type="number"
+            step="0.01"
             {...register("price", {
               required: "Product price is required",
               min: {
