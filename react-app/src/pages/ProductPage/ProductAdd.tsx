@@ -18,8 +18,8 @@ export type ProductFormValues = {
   name: string;
   price: number;
   stock: number;
-  category: { value: string; label: string } | null;
-  supplierNote: string;
+  category: { value: string; label: string } | null | string;
+  supplier_note: string;
 };
 
 export default function ProductAdd() {
@@ -40,13 +40,12 @@ export default function ProductAdd() {
       price: 0,
       stock: 0,
       category: null,
-      supplierNote: "",
+      supplier_note: "",
     },
   });
 
-  if (editId) {
-    const storedProducts = getProductById(editId);
-
+  async function fetchProductData(productId: number) {
+    const storedProducts = await getProductById(productId);
     if (storedProducts) {
       setValue("name", storedProducts.name);
       setValue("price", storedProducts.price);
@@ -55,8 +54,12 @@ export default function ProductAdd() {
         value: storedProducts.category,
         label: storedProducts.category,
       });
-      setValue("supplierNote", storedProducts.supplierNote);
+      setValue("supplier_note", storedProducts.supplier_note);
     }
+  }
+
+  if (editId) {
+    fetchProductData(editId);
   }
 
   const formSubmit: SubmitHandler<ProductFormValues> = async (data) => {
@@ -212,7 +215,7 @@ export default function ProductAdd() {
             Supplier Note:
           </label>
           <InputTextArea
-            name="supplierNote"
+            name="supplier_note"
             control={control}
             rules={{
               required: "Supplier note is required",

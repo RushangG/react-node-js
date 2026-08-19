@@ -1,15 +1,26 @@
 import { deleteProduct, getProductData } from "../../api/ProductData";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+
+type ProductCardProps = {
+  product_id: number;
+  name: string;
+  price: number;
+  stock: number;
+  category: string;
+  supplier_note: string;
+  handleDeleteProduct: (productId: number) => void;
+};
+
 function ProductCard({
-  productId,
+  product_id,
   name,
   price,
   stock,
   category,
-  supplierNote,
+  supplier_note,
   handleDeleteProduct,
-}: any) {
+}: ProductCardProps) {
   const navigate = useNavigate();
 
   function ProductEdit(productId: number) {
@@ -26,19 +37,19 @@ function ProductCard({
       <p>Price: ${price}</p>
       <p>Stock: {stock}</p>
       <p>Category: {category}</p>
-      <p className="text-sm text-gray-600">Supplier Note: {supplierNote}</p>
+      <p className="text-sm text-gray-600">Supplier Note: {supplier_note}</p>
       <div className="flex space-x-2 mt-2">
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded"
           onClick={() => {
-            ProductEdit(productId);
+            ProductEdit(product_id);
           }}
         >
           Edit
         </button>
         <button
           className="bg-red-500 text-white px-4 py-2 rounded"
-          onClick={() => DeleteProduct(productId)}
+          onClick={() => DeleteProduct(product_id)}
         >
           Delete
         </button>
@@ -48,12 +59,23 @@ function ProductCard({
 }
 
 export default function ProductDashboard() {
-  const [productList, setProductList] = useState(() => getProductData());
+  const [productList, setProductList] = useState<ProductCardProps[]>([]);
 
-  function handleDeleteProduct(productId: number) {
-    const isDeleted = deleteProduct(productId);
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  async function fetchData() {
+    const products = await getProductData();
+    setProductList(products);
+  }
+
+  console.log("productList", productList);
+  async function handleDeleteProduct(productId: number) {
+    console.log("Deleting product with id:", productId);
+    const isDeleted = await deleteProduct(productId);
     if (isDeleted) {
-      setProductList([...getProductData()]);
+      fetchData(); // Refresh the product list after deletion
     }
   }
 
@@ -62,13 +84,15 @@ export default function ProductDashboard() {
       <h1> Product Dashboard </h1>
 
       <div className="flex flex-wrap gap-4">
-        {productList.map((product, index) => (
-          <ProductCard
-            key={index}
-            {...product}
-            handleDeleteProduct={handleDeleteProduct}
-          />
-        ))}
+        {Object.values(productList).map(
+          (product: ProductCardProps, index: number) => (
+            <ProductCard
+              key={index}
+              {...product}
+              handleDeleteProduct={handleDeleteProduct}
+            />
+          ),
+        )}
       </div>
     </>
   );
