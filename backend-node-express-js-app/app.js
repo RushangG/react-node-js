@@ -2,8 +2,11 @@
 import express from "express";
 import cors from "cors";
 import mainRoutes from "./routers/index.js";
+import helmet from "helmet";
 const app = express();
 
+// remove response headers.
+app.use(helmet());
 // Middleware to parse JSON request bodies
 app.use(express.json());
 app.use(cors({
