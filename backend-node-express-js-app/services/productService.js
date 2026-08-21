@@ -5,8 +5,8 @@ const productRepo = AppDataSource.getRepository(ProductModel);
 
 export async function getAllProducts() {
     try {
-        const products = await productRepo.find();
-      
+        const products = await productRepo.query('SELECT * FROM products');
+        console.log("Fetched products:", products);
         return products;
     }
     catch (err) {
