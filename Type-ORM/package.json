@@ -1,0 +1,34 @@
+{
+  "name": "type-orm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "db:table" :"typeorm migration:generate -d src/config/db.ts",
+    "db:run" : "typeorm migration:run -d src/config/db.ts",
+    "db:undo" : "typeorm migration:revert -d src/config/db.ts"
+  },
+  "keywords": [],
+  "author": "", 
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "express": "^5.2.1",
+    "orm": "^8.0.1",
+    "pg": "^8.23.0",
+    "type": "^2.7.3",
+    "typeorm": "^1.1.0"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.16.1",
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.2.0",
+    "nodemon": "^3.1.14",
+    "ts-node": "^11.0.0-beta.1",
+    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2"
+  }
+}
