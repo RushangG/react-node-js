@@ -1,5 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-
+import { join } from 'path';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+import { Users } from '../../users/entities/users.entity';
 @Entity('products')
 export class Product {
   @PrimaryGeneratedColumn()
@@ -16,6 +24,10 @@ export class Product {
 
   @Column('int', { default: 0 })
   stock: number;
+
+  @ManyToOne(() => Users, (user) => user.id, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'user_id' })
+  user_id: Users;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;

@@ -19,8 +19,12 @@ export class ProductsService {
   }
 
   async findAll() {
-    const products = await this.productRepo.find(); 
-
+    const products = await this.productRepo.find({
+      relations: {
+        user_id: true,
+      },
+    });
+  
     if (!products || products.length === 0) {
       throw new NotFoundException('No products found');
     }
