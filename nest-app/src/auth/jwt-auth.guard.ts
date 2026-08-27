@@ -17,7 +17,7 @@ export class JwtAuthGuard implements CanActivate {
     // console.log('context.getHandler():', context.getHandler());
     // console.log('context.getClass():', context.getClass());
 
-    // console.log(
+    // console.log (
     //   'this.reflector.getAllAndOverride.toString():',
     //   this.reflector.getAllAndOverride.toString(),
     // );
@@ -40,6 +40,13 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     const token = authHeader.split(' ')[1];
+
+    //cookie based authentication
+    // console.log('authHeader:', authHeader);
+    // const cookieToken = req.cookies['authToken'];
+
+    // const token = cookieToken.token;
+    // console.log('token:', token);
     try {
       // verify token
       const decodedPayload = new JwtService().verify(token, {

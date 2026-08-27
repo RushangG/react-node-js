@@ -14,6 +14,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Roles } from 'src/auth/roles.decorator';
 import { RoleGuard } from 'src/auth/role.guard';
+import { Public } from 'src/auth/public.decorator';
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}

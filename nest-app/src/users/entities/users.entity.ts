@@ -26,7 +26,7 @@ export class Users {
   @Column({ default: true })
   isActive: boolean;
 
-  @Column()
+  @Column({ default: 'user' })
   role: string;
 
   @OneToMany(() => Product, (product) => product.user_id)
