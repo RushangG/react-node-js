@@ -63,4 +63,14 @@ export class ProductsService {
     await this.productRepo.delete(id);
     return `This action removes a #${id} product`;
   }
+
+  async findByUserId(userId: number) {
+    const products = await this.productRepo.find(
+    {
+      where: { user_id: { id: userId } },
+   
+    } 
+    );
+    return products;
+  }
 }

@@ -23,6 +23,7 @@ export default function Login() {
       navigate("/ProductsList");
     } else {
       console.log("Login failed");
+      alert("Login failed. Please check your credentials and try again.");
     }
   }
 

@@ -47,4 +47,9 @@ export class ProductsController {
   remove(@Param('id') id: string) {
     return this.productsService.remove(Number(id));
   }
+
+  @Get('user/:userId')
+  findByUserId(@Param('userId') userId: string){
+    return this.productsService.findByUserId(Number(userId));
+  }
 }

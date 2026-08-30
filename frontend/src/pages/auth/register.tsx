@@ -33,8 +33,12 @@ export default function Register() {
 
     let result = await register(userData);
 
+    if (result) {
     alert("Registration successful! Please log in.");
     navigate("/login");
+    } else {
+      alert("Registration failed. Please try again.");
+    }
   }
 
   return (
