@@ -3,10 +3,13 @@ import Login from "./pages/auth/login";
 import ProductsList from "./pages/Products/products-list";
 import AddProduct from "./pages/Products/product-add-edit";
 import Register from "./pages/auth/register";
-
+import UserList from "./pages/Users/user-list";
+import ProtectedRoutes from "./components/protectedRoutes";
+import LayoutPage from "./components/LayoutPage";
 const router = createBrowserRouter([
   {
     path: "/",
+    ErrorBoundary: () => <div>Page Not Found</div>,
     children: [
       {
         index: true,
@@ -21,13 +24,28 @@ const router = createBrowserRouter([
         element: <Register />,
       },
       {
-        path: "/ProductsList",
-        element: <ProductsList />,
+        element: <ProtectedRoutes />,
+
+        children: [
+          {
+            element: <LayoutPage />,
+            children: [
+              {
+                path: "/ProductsList",
+                element: <ProductsList />,
+              },
+              {
+                path: "/products/add",
+                element: <AddProduct />,
+              },
+              {
+                path: "/users-list",
+                element: <UserList />,
+              },
+            ],
+          },
+        ],
       },
-      {
-        path: "/products/add",
-        element: <AddProduct />,
-      }
     ],
   },
 ]);

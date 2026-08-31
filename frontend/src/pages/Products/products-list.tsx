@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {  getProductsByUserId, deleteProduct } from "../../Apis/products-api";
-import { logout } from "../../Apis/auth-api";
+import { getProductsByUserId, deleteProduct } from "../../Apis/products-api";
 import { jwtDecode } from "jwt-decode";
 export default function ProductsList() {
   const navigate = useNavigate();
@@ -10,7 +9,7 @@ export default function ProductsList() {
 
   //get the user id from the token
   const token = localStorage.getItem("authToken");
-  const decodedToken : any = jwtDecode(token as string);
+  const decodedToken: any = jwtDecode(token as string);
   // console.log("decodedToken", decodedToken);
   const userId = decodedToken.id;
 
@@ -18,16 +17,9 @@ export default function ProductsList() {
     fetchProducts();
   }, []);
 
-  async function handleLogout() {
-    const result = await logout();
-    if (result) {
-      console.log("Logout successful");
-      navigate("/login");
-    }
-  }
   async function fetchProducts() {
-    const data = await  getProductsByUserId(userId);
-    setProducts(data); 
+    const data = await getProductsByUserId(userId);
+    setProducts(data);
     console.log("response", data);
   }
 
@@ -40,22 +32,20 @@ export default function ProductsList() {
   }
 
   async function handleDeleteProduct(productId: number) {
-    
-    if(confirm("Are you sure you want to delete this product?")) {
-       await deleteProduct(productId);
-       fetchProducts(); // Refresh the product list after deletion
-    } 
-    
+    if (confirm("Are you sure you want to delete this product?")) {
+      await deleteProduct(productId);
+      fetchProducts(); // Refresh the product list after deletion
+    }
   }
 
   return (
     <div>
       <h1>Products List</h1>
-      <button className="underline text-red-500" onClick={handleLogout}>
-        Logout
-      </button>
 
-      <button className="underline text-blue-500 ml-10" onClick={handleAddProduct}>
+      <button
+        className="underline text-blue-500 ml-10"
+        onClick={handleAddProduct}
+      >
         Add New Product
       </button>
       <table className="table-auto border-collapse border border-gray-300">
@@ -67,6 +57,7 @@ export default function ProductsList() {
             <th>Price</th>
             <th>Stock</th>
             <th>Created At</th>
+            <th> actions </th>
           </tr>
         </thead>
         <tbody>
@@ -79,16 +70,21 @@ export default function ProductsList() {
                 <td>${product.price}</td>
                 <td>{product.stock}</td>
                 <td>{product.created_at}</td>
-                <button 
-                onClick={() => handleEditProduct(product.id)}
-                  className="border bg-blue-200 rounded p-2 text-black ml-20"
+                <td>
+                  <button
+                    onClick={() => handleEditProduct(product.id)}
+                    className="border bg-blue-200 rounded p-2 text-black ml-20"
                   >
                     Edit
                   </button>
-                <button onClick={() => handleDeleteProduct(product.id)}
-                  
-                  className="border bg-red-200 rounded p-2 text-black ml-20"
-                  > Delete</button>
+                  <button
+                    onClick={() => handleDeleteProduct(product.id)}
+                    className="border bg-red-200 rounded p-2 text-black ml-20"
+                  >
+                    {" "}
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
         </tbody>

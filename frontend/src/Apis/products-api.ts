@@ -8,10 +8,17 @@ interface Product {
 }
 
 //get the user id from the token
-  const token = localStorage.getItem("authToken");
-  const decodedToken : any = jwtDecode(token as string);
+const token = localStorage.getItem("authToken");
+let userId: null;
+
+if (!token) {
+  console.log("No auth token found in local storage");
+} else {
+  const decodedToken: any = jwtDecode(token as string);
   // console.log("decodedToken", decodedToken);
-  const userId = decodedToken.id;
+
+  userId = decodedToken?.id;
+}
 
 export async function getProducts() {
   const products = await apiClient.get("/products");
@@ -24,24 +31,21 @@ export async function getProductsByUserId(userId: number) {
 }
 
 export async function addProduct(product: Product) {
-
+  // console.log("userId in addProduct:", userId); // Log the userId
   let productWithUserId = {
     ...product,
     user_id: userId,
   };
-
 
   const response = await apiClient.post("/products", productWithUserId);
   return response.data;
 }
 
 export async function updateProduct(productId: number, product: Product) {
-  
   const response = await apiClient.put(`/products/${productId}`, product);
   return response.data;
-
 }
-  
+
 export async function deleteProduct(productId: number) {
   const response = await apiClient.delete(`/products/${productId}`);
   return response.data;

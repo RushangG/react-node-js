@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Res } from '@nestjs/common';
 import { type Response } from 'express';
 import { AuthService } from './auth.service';
-import { Users } from '../users/entities/users.entity';
+import { Users } from '../modules/users/entities/users.entity';
 import { Public } from './public.decorator';
 @Controller('auth')
 export class AuthController {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { login, type userReq } from "../../Apis/auth-api";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 export default function Login() {
   const [formData, setFormData] = useState<userReq>({
     email: "",
@@ -18,9 +19,16 @@ export default function Login() {
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     let token = await login(formData);
+
     if (token) {
       console.log("Login successful, token:", token);
-      navigate("/ProductsList");
+      let userData = jwtDecode(token) as any;
+      console.log("Decoded user data:", userData);
+      if (userData.role === "admin") {
+        navigate("/users-list");
+      } else {
+        navigate("/ProductsList");
+      }
     } else {
       console.log("Login failed");
       alert("Login failed. Please check your credentials and try again.");

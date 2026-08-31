@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
-import { AppDataSource } from '../data-source';
+import { AppDataSource } from '../../data-source';
 
 @Injectable()
 export class ProductsService {
@@ -15,16 +15,22 @@ export class ProductsService {
 
   async create(createProductDto: CreateProductDto) {
     const product = this.productRepo.create(createProductDto);
+
     return this.productRepo.save(product);
   }
 
   async findAll() {
-    const products = await this.productRepo.find({
-      relations: {
-        user_id: true,
-      },
-    });
-  
+    // const products = await this.productRepo.find({
+    //   relations: {
+    //     user_id: true,
+    //   },
+    // });
+
+    const products = await AppDataSource.createQueryBuilder()
+      .select('Product')
+      .from(Product, 'Product')
+      .getMany();
+
     if (!products || products.length === 0) {
       throw new NotFoundException('No products found');
     }
@@ -33,7 +39,11 @@ export class ProductsService {
   }
 
   async findOne(id: number) {
-    const product = await this.productRepo.findOneBy({ id });
+    // const product = await this.productRepo.findOneBy({ id });
+    const product = await this.productRepo
+      .createQueryBuilder('Product')
+      .where('Product.id = :id', { id })
+      .getOne();
 
     if (!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
@@ -65,12 +75,16 @@ export class ProductsService {
   }
 
   async findByUserId(userId: number) {
-    const products = await this.productRepo.find(
-    {
-      where: { user_id: { id: userId } },
-   
-    } 
-    );
+    // const products = await this.productRepo.find({
+    //   where: { user_id: { id: userId } },
+    // });
+  
+
+    const products = await this.productRepo
+      .createQueryBuilder('Product')
+      .where('Product.user_id = :userId', { userId })
+      .getMany();
+
     return products;
   }
 }

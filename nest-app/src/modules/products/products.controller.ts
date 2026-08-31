@@ -8,6 +8,7 @@ import {
   Delete,
   Put,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -49,7 +50,15 @@ export class ProductsController {
   }
 
   @Get('user/:userId')
-  findByUserId(@Param('userId') userId: string){
+  findByUserId(@Req() req, @Param('userId') userId: string) {
+    // only login user id only can access their products.
+    let loginUserId = req.user?.id; // Get the user ID from the request object
+    // console.log('loginUserId', loginUserId);
+    // console.log('userId', userId);
+    if (loginUserId !== Number(userId)) {
+      throw new Error('You are not authorized to access this resource.');
+    }
+
     return this.productsService.findByUserId(Number(userId));
   }
 }
