@@ -53,7 +53,7 @@ export class JwtAuthGuard implements CanActivate {
         secret: process.env.JWT_SECRET,
       });
       req.user = decodedPayload;
-      console.log('user', req.user);
+      // console.log('user', req.user);
       return true;
     } catch (error) {
       throw new UnauthorizedException('Invalid token');

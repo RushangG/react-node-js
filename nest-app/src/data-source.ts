@@ -13,5 +13,5 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   entities: [Product, Users],
   synchronize: true, // set to false in production
-  logging: true, // Enable query and error logging
+  logging: false, // Enable query and error logging
 });

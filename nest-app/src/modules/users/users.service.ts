@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AppDataSource } from '../../data-source';
@@ -14,6 +18,10 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
+    if (!createUserDto || !createUserDto.email) {
+      throw new BadRequestException('Email is required to register');
+    }
+
     console.log('Received createUserDto:', createUserDto); // Log the received DTO
     const user = await this.usersRepos.create(createUserDto);
     console.log('Created user:', user); // Log the created user object

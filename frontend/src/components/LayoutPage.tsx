@@ -46,10 +46,7 @@ export default function LayoutPage() {
       <header className="bg-gray-800 text-white p-4">
         <h1 className="text-xl font-bold">My App</h1>
         <NavLink />
-        <button
-          className="underline text-red-500 ml-300"
-          onClick={handleLogout}
-        >
+        <button className="underline text-red-500 " onClick={handleLogout}>
           Logout
         </button>
       </header>

@@ -32,6 +32,9 @@ export class Users {
   @OneToMany(() => Product, (product) => product.user_id)
   products: Product[];
 
+  @Column({ type: 'varchar', nullable: true })
+  hashedRefreshToken: string | null;
+
   @CreateDateColumn()
   createdAt: Date;
 

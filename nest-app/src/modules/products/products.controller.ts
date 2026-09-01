@@ -9,6 +9,8 @@ import {
   Put,
   UseGuards,
   Req,
+  UsePipes,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -16,7 +18,12 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { Roles } from 'src/auth/roles.decorator';
 import { RoleGuard } from 'src/auth/role.guard';
 import { Public } from 'src/auth/public.decorator';
+import { ValidationPipe } from 'src/app/pipes/validation.pipe';
+import { LoggingInterceptor } from 'src/interceptor/loggin.interceptor';
+import { CurrentUser } from '../../decorator/current-user.decorator';
+
 @Controller('products')
+@UseInterceptors(LoggingInterceptor)
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
@@ -28,11 +35,13 @@ export class ProductsController {
   @Get()
   // @Roles('admin') // only admin access.
   // @UseGuards(RoleGuard)
-  findAll() {
+  findAll(@CurrentUser() user: any) {
+    // console.log('Current User:', user); // Log the current user information
     return this.productsService.findAll();
   }
 
   @Get(':id')
+  @UsePipes(ValidationPipe)
   // @Roles('user') // Only user access.
   // @UseGuards(RoleGuard)
   findOne(@Param('id') id: string) {

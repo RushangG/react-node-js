@@ -20,16 +20,18 @@ export class ProductsService {
   }
 
   async findAll() {
-    // const products = await this.productRepo.find({
-    //   relations: {
-    //     user_id: true,
-    //   },
-    // });
+    const products = await this.productRepo.find({
+      relations: {
+        user_id: true,
+      },
+    });
 
-    const products = await AppDataSource.createQueryBuilder()
-      .select('Product')
-      .from(Product, 'Product')
-      .getMany();
+    // const products = await AppDataSource.createQueryBuilder()
+    //   .select('Product')
+
+    //   .from(Product, 'Product')
+    //   .leftJoinAndSelect('Product.user_id', 'Users')
+    //   .getMany();
 
     if (!products || products.length === 0) {
       throw new NotFoundException('No products found');
@@ -78,7 +80,6 @@ export class ProductsService {
     // const products = await this.productRepo.find({
     //   where: { user_id: { id: userId } },
     // });
-  
 
     const products = await this.productRepo
       .createQueryBuilder('Product')

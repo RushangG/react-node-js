@@ -8,6 +8,7 @@ import {
   Param,
   Delete,
   HttpCode,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -21,6 +22,7 @@ export class UsersController {
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
+    console.log('Received createUserDto in controller:', createUserDto); // Log the received DTO
     return this.usersService.create(createUserDto);
   }
 
@@ -32,8 +34,8 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.findOne(id);
   }
 
   @Put(':id')

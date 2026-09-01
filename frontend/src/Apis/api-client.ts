@@ -2,6 +2,8 @@ import axios from "axios";
 import router from "../routes";
 const BASE_URL = "http://localhost:3000";
 
+
+
 const apiClient = axios.create({
   baseURL: BASE_URL,
   headers: {
@@ -29,14 +31,40 @@ apiClient.interceptors.response.use(
   (response) => {
     return response;
   },
-  (error) => {
+  async (error) => {
+    const originalRequest = error.config;
+
     if (error.response && error.response.status === 401) {
       // Handle unauthorized error (e.g., redirect to login page)
-      localStorage.removeItem("authToken");
 
-      router.navigate("/login"); // Assuming you have a redirect function to redirect
-      console.error("Unauthorized access - redirecting to login.");
+      try {
+        // Attempt to refresh the token
+        const refreshToken = await axios.post(
+          `${BASE_URL}/auth/refresh-token`,
+          { withCredentials: true }, // Include credentials (cookies) in requests
+        );
+
+        const newToken = refreshToken.data.accessToken;
+        localStorage.setItem("authToken", newToken);
+
+        originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
+        console.log(
+          "Retrying original request with new token:",
+          originalRequest,
+        );
+
+        return apiClient(originalRequest); // Retry the original request with the new token
+      } catch (refreshError) {
+        console.log("Refresh token request failed:", refreshError);
+
+        localStorage.removeItem("authToken");
+
+        // Redirect to login page
+        router.navigate("/login"); // Assuming you have a redirect function to redirect
+        console.error("Unauthorized access - redirecting to login.");
+      }
+
+      return Promise.reject(error);
     }
-    return Promise.reject(error);
   },
 );
