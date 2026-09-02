@@ -36,7 +36,7 @@ export default function LayoutPage() {
   async function handleLogout() {
     const result = await logout();
     if (result) {
-      console.log("Logout successful");
+      console.log("layout Logout successful");
       navigate("/login");
     }
   }

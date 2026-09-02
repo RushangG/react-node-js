@@ -1,12 +1,28 @@
-import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { type Response } from 'express';
 import { AuthService } from './auth.service';
 import { Users } from '../modules/users/entities/users.entity';
 import { CreateUserDto } from '../modules/users/dto/create-user.dto';
 import { Public } from './public.decorator';
+import { RefreshTokenGuard } from './refresh.token.guard';
+
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Post('register')
+  @Public()
+  async register(@Body() body: CreateUserDto) {
+    return await this.authService.register(body);
+  }
 
   @Post('login')
   @Public()
@@ -22,52 +38,38 @@ export class AuthController {
       user.role,
     );
 
-    const refreshToken = await this.authService.updateRefreshToken(
-      user.id,
-      token.refreshToken,
-    );
+    // save the new  refresh token in the database
+    await this.authService.updateRefreshToken(user.id, token.refreshToken);
 
     //cookie set for authToken
     response.cookie('refreshToken', token.refreshToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'strict',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+      secure: false, // allow http in development, set to true in production
+      httpOnly: true, // prevent client-side JavaScript from accessing the cookie
+      sameSite: 'strict',
     });
 
     return { message: 'Login successful', token: token.accessToken };
   }
 
-  @Post('register')
   @Public()
-  async register(@Body() body: CreateUserDto) {
-    return await this.authService.register(body);
-  }
-
   @Post('refresh-token')
-  @Public()
-  async getrefreshToken(
+  @UseGuards(RefreshTokenGuard)
+  async getRefreshToken(
     @Req() req,
     @Res({ passthrough: true }) response: Response,
   ) {
     console.log('Request user:', req.user); // Log the request object to see what is being received
-    const userId = req.user.id; 
-    const referecnceToken = req.cookies['refreshToken'];
 
-    if (!referecnceToken) {
+    const userId = req.user.id;
+    const refreshTokens = req.cookies['refreshToken'];
+
+    if (!refreshTokens) {
       return { message: 'Refresh token not found' };
     }
 
-    const token = await this.authService.refreshTokens(userId, referecnceToken);
-
-    response.cookie('refreshToken', token.refreshToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
-    });
-
-    return { accessToken: token.accessToken };
+    const Tokens = await this.authService.refreshTokens(userId, refreshTokens);
+    return { accessToken: Tokens };
   }
 
   @Post('logout')
@@ -78,7 +80,7 @@ export class AuthController {
   ) {
     //   console.log('Logout request body:', body); // Log the request body to see what is being sent
     // // Log the request object to see what is being received
-
+    console.log('req.user:', req.user);
     await this.authService.logout(req.user.id);
 
     response.clearCookie('refreshToken');

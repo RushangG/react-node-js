@@ -88,4 +88,41 @@ export class ProductsService {
 
     return products;
   }
+
+  // only for transaction testing purpose
+  async productsFindByName(name: string) {
+    if (!AppDataSource.isInitialized) {
+      await AppDataSource.initialize();
+    }
+
+    const queryRunner = AppDataSource.createQueryRunner();
+
+    await queryRunner.connect();
+
+    await queryRunner.startTransaction();
+
+    try {
+      // let products = await queryRunner.manager.update(
+      //   Product,
+      //   { name: name },
+      //   { name: 'Updated 152' },
+      // );
+      let product;
+      console.log('time started');
+
+      product = await queryRunner.manager.update(
+        Product,
+        { name: name },
+        { name: 'Updated 152' },
+      );
+
+      await queryRunner.commitTransaction();
+
+      console.log('productsFindByName:', product);
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+  }
 }

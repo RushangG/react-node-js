@@ -1,3 +1,4 @@
+
 import apiClient from "./api-client";
 
 import { jwtDecode } from "jwt-decode";
@@ -7,7 +8,7 @@ const token = localStorage.getItem("authToken");
 let userId: null;
 
 if (!token) {
-  console.log("No auth token found in local storage");
+  // console.log("No auth token found in local storage");
 } else {
   const decodedToken: any = jwtDecode(token as string);
   // console.log("decodedToken", decodedToken);
@@ -57,18 +58,19 @@ export async function register(req: userReq) {
 
 export async function logout() {
   try {
-    const res = await apiClient.post("/auth/logout",);
+    const res = await apiClient.post("/auth/logout");
 
     console.log("response", res);
-
+    if (res.status === 200) {
+      console.log("Logout successful");
+      localStorage.removeItem("authToken");
+      
+    }
     return true;
   } catch (error) {
     console.error("Logout error:", error);
     return false;
-  }
-  finally
-  {
-        localStorage.removeItem("authToken");
-
+  } finally {
+    localStorage.removeItem("authToken");
   }
 }

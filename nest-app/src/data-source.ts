@@ -6,6 +6,7 @@ config(); // .env variables loaded.
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
+  isolationLevel: 'SERIALIZABLE',
   host: process.env.DB_HOST,
   port: parseInt('process.env.DB_PORT'),
   username: process.env.DB_USERNAME,

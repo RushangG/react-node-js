@@ -4,11 +4,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Users } from '../modules/users/entities/users.entity';
-
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
-
 import bcrypt from 'bcrypt';
 import { CreateUserDto } from '../modules/users/dto/create-user.dto';
 @Injectable()
@@ -16,10 +14,10 @@ export class AuthService {
   constructor(
     @InjectRepository(Users)
     private userRepo: Repository<Users>,
-
     private jwtService: JwtService,
   ) {}
 
+  // register
   async register(user: CreateUserDto) {
     const existingUser = await this.userRepo.findOneBy({ email: user.email });
     if (existingUser) {
@@ -34,6 +32,7 @@ export class AuthService {
     return await this.userRepo.save(newUser);
   }
 
+  //login
   async login(email: string, password: string) {
     const user = await this.userRepo.findOneBy({ email });
     if (!user) {
@@ -55,20 +54,37 @@ export class AuthService {
     await this.userRepo.update({ id: userId }, { hashedRefreshToken: null });
   }
 
-  async getTokens(userId: number, email: string, role: string) {
+  async getAccessToken(userId: number, email: string, role: string) {
     const jwtPayload = { id: userId, email: email, role: role };
+    const accessToken = await this.jwtService.sign(jwtPayload, {
+      secret: process.env.JWT_SECRET,
+      expiresIn: '2m',
+    });
+    return accessToken;
+  }
+
+  async getRefreshToken(userId: number, email: string, role: string) {
+    const jwtPayload = {
+      id: userId,
+      email: email,
+      role: role,
+    };
+    const refreshToken = await this.jwtService.sign(jwtPayload, {
+      secret: process.env.JWT_REFRESH_SECRET,
+      expiresIn: '15m', // 15 minutes
+    });
+
+    console.log('Generated refresh token:', refreshToken); // Log the generated refresh token
+    return refreshToken;
+  }
+
+  async getTokens(userId: number, email: string, role: string) {
     console.log('jwtsecret', process.env.JWT_SECRET);
     console.log('jwtrefreshsecret', process.env.JWT_REFRESH_SECRET);
 
-    const accessToken = await this.jwtService.sign(jwtPayload, {
-      secret: process.env.JWT_SECRET,
-      expiresIn: '15s',
-    });
+    const accessToken = await this.getAccessToken(userId, email, role);
 
-    const refreshToken = await this.jwtService.sign(jwtPayload, {
-      secret: process.env.JWT_REFRESH_SECRET,
-      expiresIn: '7d',
-    });
+    const refreshToken = await this.getRefreshToken(userId, email, role);
 
     return { accessToken, refreshToken };
   }
@@ -90,14 +106,18 @@ export class AuthService {
       user.hashedRefreshToken,
     );
 
+    console.log('isTokenValid:', isTokenValid); // Log the result of the token validation
+
     if (!isTokenValid) {
       throw new ForbiddenException('Access Denied Invalid Refresh Token');
     }
 
-    const tokens = await this.getTokens(user.id, user.email, user.role);
+    const accessTokens = await this.getAccessToken(
+      user.id,
+      user.email,
+      user.role,
+    );
 
-    await this.updateRefreshToken(user.id, tokens.refreshToken);
-
-    return tokens;
+    return accessTokens;
   }
 }

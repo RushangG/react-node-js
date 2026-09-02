@@ -12,7 +12,7 @@ const token = localStorage.getItem("authToken");
 let userId: null;
 
 if (!token) {
-  console.log("No auth token found in local storage");
+  // console.log("No auth token found in local storage");
 } else {
   const decodedToken: any = jwtDecode(token as string);
   // console.log("decodedToken", decodedToken);

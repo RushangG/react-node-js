@@ -1,6 +1,6 @@
 import { getAllProducts, getProductById, deleteProductById, createProduct, updateProduct } from "../services/productService.js";
 
-export async function getAllProductsController(req, res, next) {
+export async function getAllProductsController(req, res) {
 
     try {
         const products = await getAllProducts();

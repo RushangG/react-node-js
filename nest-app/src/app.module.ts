@@ -21,6 +21,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ChatGateway } from './modules/websocket/chat.gateway';
 
 import { LoggerMiddleware } from './middleware/logger.middleware';
+import { addTransactionalDataSource } from 'typeorm-transactional';
 
 @Module({
   imports: [
