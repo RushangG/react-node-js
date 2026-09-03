@@ -9,6 +9,7 @@ import {
   Delete,
   HttpCode,
   ParseIntPipe,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -46,5 +47,11 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
+  }
+
+  @Post('user-role')
+  createUserRole(@Body() body: { userId: number; roleId: number }) {
+    const { userId, roleId } = body;
+    return this.usersService.userRoleCreate(userId, roleId);
   }
 }

@@ -1,4 +1,5 @@
 import { Product } from 'src/modules/products/entities/product.entity';
+import { Roles } from '../../roles/entities/roles.entity';
 import {
   Entity,
   Column,
@@ -7,6 +8,9 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   OneToMany,
+  ManyToMany,
+  JoinColumn,
+  JoinTable,
 } from 'typeorm';
 
 @Entity()
@@ -31,6 +35,10 @@ export class Users {
 
   @OneToMany(() => Product, (product) => product.user_id)
   products: Product[];
+
+  @ManyToMany(() => Roles)
+  @JoinTable({ name: 'users_roles' })
+  roles: Roles[];
 
   @Column({ type: 'varchar', nullable: true })
   hashedRefreshToken: string | null;

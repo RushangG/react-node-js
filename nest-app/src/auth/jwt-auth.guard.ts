@@ -33,6 +33,8 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     const req = context.switchToHttp().getRequest();
+    const res = context.switchToHttp().getResponse();
+    // console.log('res.headers:', res.headers, res.statusCode);
     const authHeader = req.headers['authorization'];
 
     if (!authHeader) {

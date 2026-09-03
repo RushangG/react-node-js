@@ -8,12 +8,14 @@ import { AppDataSource } from '../../data-source';
 
 @Injectable()
 export class ProductsService {
-  constructor(
+  constructor( 
     @InjectRepository(Product)
-    private readonly productRepo = AppDataSource.getRepository(Product),
+    private readonly productRepo: Repository<Product>,
   ) {}
 
   async create(createProductDto: CreateProductDto) {
+    console.log('Received service createProductDto:', createProductDto); // log
+
     const product = this.productRepo.create(createProductDto);
 
     return this.productRepo.save(product);

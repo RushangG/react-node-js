@@ -58,7 +58,7 @@ export class AuthService {
     const jwtPayload = { id: userId, email: email, role: role };
     const accessToken = await this.jwtService.sign(jwtPayload, {
       secret: process.env.JWT_SECRET,
-      expiresIn: '2m',
+      expiresIn: '1d',
     });
     return accessToken;
   }
@@ -71,7 +71,7 @@ export class AuthService {
     };
     const refreshToken = await this.jwtService.sign(jwtPayload, {
       secret: process.env.JWT_REFRESH_SECRET,
-      expiresIn: '15m', // 15 minutes
+      expiresIn: '5d', // 5 day
     });
 
     console.log('Generated refresh token:', refreshToken); // Log the generated refresh token

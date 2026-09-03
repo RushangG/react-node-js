@@ -16,12 +16,13 @@ import { UsersModule } from './modules/users/users.module';
 import { UsersController } from './modules/users/users.controller';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, RouterModule } from '@nestjs/core';
 
 import { ChatGateway } from './modules/websocket/chat.gateway';
 
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { addTransactionalDataSource } from 'typeorm-transactional';
+import { RolesModule } from './modules/roles/roles.module';
 
 @Module({
   imports: [
@@ -30,6 +31,20 @@ import { addTransactionalDataSource } from 'typeorm-transactional';
     ProductsModule,
     UsersModule,
     AuthModule,
+    RolesModule,
+
+    // for module base router
+    RouterModule.register([
+      {
+        path: 'api/v1',
+        children: [
+          { path: '', module: ProductsModule },
+          { path: '', module: UsersModule },
+          { path: '', module: AuthModule },
+          { path: '', module: RolesModule },
+        ],
+      },
+    ]),
   ],
   controllers: [AppController],
   providers: [

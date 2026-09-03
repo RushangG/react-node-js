@@ -9,12 +9,14 @@ import { AppDataSource } from '../../data-source';
 import { Users } from './entities/users.entity';
 import bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, EntityManager } from 'typeorm';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(Users)
     private usersRepos = AppDataSource.getRepository(Users),
+    // private entityManager: EntityManager,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -35,6 +37,7 @@ export class UsersService {
     const users = await this.usersRepos.find({
       relations: {
         products: true, // Assuming you have a relation named 'products' in the Users entity
+        roles: true, // Assuming you have a relation named 'roles' in the Users entity
       },
     });
 
@@ -56,6 +59,7 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
+
     return user;
   }
 
@@ -77,5 +81,29 @@ export class UsersService {
     }
     await this.usersRepos.delete({ id: id });
     return { message: 'User deleted successfully' };
+  }
+
+  async userRoleCreate(userId: number, roleId: number) {
+    // const userRoleRepo = await this.entityManager
+    //   .createQueryBuilder()
+    //   .select('*')
+    //   .from('users_roles', 'users_roles')
+    //   .getRawMany();
+
+    if (!AppDataSource.isInitialized) {
+      await AppDataSource.initialize();
+    }
+
+    const entityManager = AppDataSource.manager;
+    const userRoleRepo = await entityManager
+      .createQueryBuilder()
+      .insert()
+      .into('users_roles')
+      .values({ usersId: userId, rolesId: roleId })
+      .execute();
+
+    console.log('userRoleCreate result:', userRoleRepo); // Log the result of the save operation
+
+    return userRoleRepo;
   }
 }
