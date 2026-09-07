@@ -4,6 +4,7 @@ import ProductsList from "./pages/Products/products-list";
 import AddProduct from "./pages/Products/product-add-edit";
 import Register from "./pages/auth/register";
 import UserList from "./pages/Users/user-list";
+import UserRole from "./pages/Users/user-role";
 import ProtectedRoutes from "./components/protectedRoutes";
 import LayoutPage from "./components/LayoutPage";
 const router = createBrowserRouter([
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
               {
                 path: "/users-list",
                 element: <UserList />,
+              },
+              {
+                path: "/user-role",
+                element: <UserRole />,
               },
             ],
           },

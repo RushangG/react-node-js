@@ -19,8 +19,9 @@ import { Roles } from 'src/auth/roles.decorator';
 import { RoleGuard } from 'src/auth/role.guard';
 import { Public } from 'src/auth/public.decorator';
 import { ValidationPipe } from 'src/app/pipes/validation.pipe';
-import { LoggingInterceptor } from 'src/interceptor/loggin.interceptor';
+import { LoggingInterceptor } from 'src/interceptor/logging.interceptor';
 import { CurrentUser } from '../../decorator/current-user.decorator';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @Controller('products')
 @UseInterceptors(LoggingInterceptor)
@@ -33,6 +34,7 @@ export class ProductsController {
   }
 
   @Get()
+  // @SkipThrottle()
   // @Roles('admin') // only admin access.
   // @UseGuards(RoleGuard)
   findAll(@CurrentUser() user: any) {

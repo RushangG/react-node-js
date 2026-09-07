@@ -24,6 +24,9 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { RolesModule } from './modules/roles/roles.module';
 
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { FileUploadModule } from './modules/file-upload/file-upload.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot(), // load .env file
@@ -32,7 +35,7 @@ import { RolesModule } from './modules/roles/roles.module';
     UsersModule,
     AuthModule,
     RolesModule,
-
+    FileUploadModule,
     // for module base router
     RouterModule.register([
       {
@@ -42,9 +45,22 @@ import { RolesModule } from './modules/roles/roles.module';
           { path: '', module: UsersModule },
           { path: '', module: AuthModule },
           { path: '', module: RolesModule },
+          { path: '', module: FileUploadModule },
         ],
       },
     ]),
+
+    FileUploadModule,
+
+    // ThrottlerModule.forRoot({
+    //   throttlers: [
+    //     {
+    //       ttl: 60000, // Time to live in seconds
+    //       limit: 5, // Maximum number of requests within the ttl
+    //       blockDuration: 30000, // Block for 30 seconds.
+    //     },
+    //   ],
+    // }),
   ],
   controllers: [AppController],
   providers: [
@@ -53,6 +69,10 @@ import { RolesModule } from './modules/roles/roles.module';
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    // {
+    //   provide: 'APP_GUARD',
+    //   useClass: ThrottlerGuard,
+    // },
     ChatGateway,
   ],
 })

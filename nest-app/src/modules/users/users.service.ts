@@ -52,6 +52,7 @@ export class UsersService {
     const user = await this.usersRepos.findOne({
       relations: {
         products: true,
+        roles: true,
       },
       where: { id: id },
     });
@@ -95,15 +96,18 @@ export class UsersService {
     }
 
     const entityManager = AppDataSource.manager;
-    const userRoleRepo = await entityManager
-      .createQueryBuilder()
-      .insert()
-      .into('users_roles')
-      .values({ usersId: userId, rolesId: roleId })
-      .execute();
 
-    console.log('userRoleCreate result:', userRoleRepo); // Log the result of the save operation
-
-    return userRoleRepo;
+    try {
+      const userRoleRepo = await entityManager
+        .createQueryBuilder()
+        .insert()
+        .into('users_roles')
+        .values({ usersId: userId, rolesId: roleId })
+        .execute();
+      // console.log('userRoleCreate result:', userRoleRepo); // Log the result of the save operation
+      return userRoleRepo;
+    } catch (error) {
+      throw new BadRequestException('Error creating user role: ' + error);
+    }
   }
 }
