@@ -10,8 +10,8 @@ import { AppDataSource } from '../../data-source';
 import { Users } from './entities/users.entity';
 import bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, EntityManager } from 'typeorm';
 
+import { Repository, EntityManager, In } from 'typeorm';
 @Injectable()
 export class UsersService {
   constructor(
@@ -108,21 +108,27 @@ export class UsersService {
     }
   }
 
+
   async userRolesUpdate(userId: number, rolesId: number[]) {
     try {
+      await this.entityManager.delete('users_roles', { usersId: userId });
+  
       let userRoleRepo = await this.entityManager
         .createQueryBuilder()
-        .update('users_roles')
-        .set(rolesId.map((roleId) => ({ rolesId: roleId })))
-        .where('usersId = :userId', { userId })
+        .insert()
+        .into('users_roles')
+        .values(rolesId.map((roleId) => ({ usersId: userId, rolesId: roleId })))
         .execute();
-
-      // console.log('userRoleUpdate result:', userRoleRepo); // Log the result of the save operation
       return userRoleRepo;
     } catch (error) {
       throw new ConflictException('Error updating user roles: ' + error);
     }
   }
+
+  
+ 
+
+
 
   async userRoleDelete(userId: number, roleId: number) {
     let userRoleRepo = await this.entityManager

@@ -17,6 +17,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Roles } from '../../auth/roles.decorator';
 import { RoleGuard } from '../../auth/role.guard';
 import { UseGuards } from '@nestjs/common';
+import { Public } from 'src/auth/public.decorator';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -55,10 +56,12 @@ export class UsersController {
     return this.usersService.userRoleCreate(userId, roleId);
   }
 
+  @Public()
   @Post('user-roles-update')
   updateUserRoles(@Body() body: { userId: number; rolesId: number[] }) {
     const { userId, rolesId } = body;
-    return this.usersService.userRolesUpdate(userId, rolesId);
+    const uniqueRolesId = [...new Set(rolesId)];
+    return this.usersService.userRolesUpdate(userId, uniqueRolesId);
   }
 
   @Post('user-role-delete')
