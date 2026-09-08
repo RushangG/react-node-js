@@ -28,6 +28,10 @@ export default function LayoutPage() {
               Users
             </Link>
           )}
+
+          <Link to="/messagePage" className="mr-4">
+            Message
+          </Link>
         </nav>
       </div>
     );

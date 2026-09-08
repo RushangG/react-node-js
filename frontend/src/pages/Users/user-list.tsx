@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { getUsers } from "../../Apis/user-api";
+import { getUsers, deleteUser } from "../../Apis/user-api";
 import { useNavigate } from "react-router-dom";
 export default function UserList() {
   const [users, setUsers] = useState([]);
 
   const navigate = useNavigate();
+  
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -14,6 +15,20 @@ export default function UserList() {
     setUsers(data);
     console.log("response", data);
   }
+
+  async function handleUpdate(userId: string) {
+    // Implementation for updating a user
+    navigate("/user-update", { state: {  userId } });
+  }
+
+  async function handleDelete(userId: string) {
+    // Implementation for deleting a user
+    if (confirm("Are you sure want to delete this user ? ")) {
+      await deleteUser(Number(userId));
+      fetchUsers(); // Refresh the user list after deletion
+    }
+  }
+
   return (
     <div>
       <h1>User List</h1>
@@ -34,6 +49,7 @@ export default function UserList() {
             <th> Email</th>
             <th>Count of Products </th>
             <th>Roles</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -48,6 +64,20 @@ export default function UserList() {
                 {user.roles.map((role: any) => (
                   <span key={role.id}> {role.name} , </span>
                 ))}
+              </th>
+              <th className="border border-gray-300 px-4 py-2">
+                <button
+                  className="bg-green-400 text-white px-4 py-2 rounded mr-2 cursor-pointer"
+                  onClick={() => handleUpdate(user.id)}
+                >
+                  Update
+                </button>
+                <button
+                  className="bg-red-400 text-white px-4 py-2 rounded cursor-pointer"
+                  onClick={() => handleDelete(user.id)}
+                >
+                  Delete
+                </button>
               </th>
             </tr>
           ))}

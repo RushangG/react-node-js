@@ -54,4 +54,17 @@ export class UsersController {
     const { userId, roleId } = body;
     return this.usersService.userRoleCreate(userId, roleId);
   }
+
+  @Post('user-roles-update')
+  updateUserRoles(@Body() body: { userId: number; rolesId: number[] }) {
+    const { userId, rolesId } = body;
+    return this.usersService.userRolesUpdate(userId, rolesId);
+  }
+
+  @Post('user-role-delete')
+  deleteUserRole(@Body() body: { userId: number; roleId: number }) {
+    const { userId, roleId } = body;
+    return this.usersService.userRoleDelete(userId, roleId);
+  }
+  
 }

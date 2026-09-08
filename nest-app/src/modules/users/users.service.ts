@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -17,6 +18,8 @@ export class UsersService {
     @InjectRepository(Users)
     private usersRepos = AppDataSource.getRepository(Users),
     // private entityManager: EntityManager,
+
+    private entityManager: EntityManager = AppDataSource.manager,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -70,7 +73,7 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
     const updatedUser = Object.assign(user, updateUserDto);
-    updatedUser.password = bcrypt.hashSync(updatedUser.password, 10); // Hash the password before saving
+    // updatedUser.password = bcrypt.hashSync(updatedUser.password, 10); // Hash the password before saving
 
     return await this.usersRepos.save(updatedUser);
   }
@@ -91,14 +94,8 @@ export class UsersService {
     //   .from('users_roles', 'users_roles')
     //   .getRawMany();
 
-    if (!AppDataSource.isInitialized) {
-      await AppDataSource.initialize();
-    }
-
-    const entityManager = AppDataSource.manager;
-
     try {
-      const userRoleRepo = await entityManager
+      const userRoleRepo = await this.entityManager
         .createQueryBuilder()
         .insert()
         .into('users_roles')
@@ -107,7 +104,50 @@ export class UsersService {
       // console.log('userRoleCreate result:', userRoleRepo); // Log the result of the save operation
       return userRoleRepo;
     } catch (error) {
-      throw new BadRequestException('Error creating user role: ' + error);
+      throw new ConflictException('Error creating user role: ' + error);
+    }
+  }
+
+  async userRolesUpdate(userId: number, rolesId: number[]) {
+    try {
+      let userRoleRepo = await this.entityManager
+        .createQueryBuilder()
+        .update('users_roles')
+        .set(rolesId.map((roleId) => ({ rolesId: roleId })))
+        .where('usersId = :userId', { userId })
+        .execute();
+
+      // console.log('userRoleUpdate result:', userRoleRepo); // Log the result of the save operation
+      return userRoleRepo;
+    } catch (error) {
+      throw new ConflictException('Error updating user roles: ' + error);
+    }
+  }
+
+  async userRoleDelete(userId: number, roleId: number) {
+    let userRoleRepo = await this.entityManager
+      .createQueryBuilder()
+      .select('*')
+      .from('users_roles', 'users_roles')
+      .where(' "usersId" = :userId AND "rolesId" = :roleId', { userId, roleId })
+      .getRawMany();
+
+    // console.log('userRoleDelete result:', userRoleRepo); // Log the result of the save operation
+    if (!userRoleRepo || userRoleRepo.length === 0) {
+      throw new NotFoundException('User role not found');
+    }
+
+    try {
+      const userRoleRepo = await this.entityManager
+        .createQueryBuilder()
+        .delete()
+        .from('users_roles')
+        .where('usersId = :userId AND rolesId = :roleId', { userId, roleId })
+        .execute();
+
+      return 'User role deleted successfully';
+    } catch (error) {
+      throw new BadRequestException('Error deleting user role: ' + error);
     }
   }
 }
