@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
-import { login, type userReq } from "../../Apis/auth-api";
+import { loginUser, type userReq } from "../../Apis/auth-api";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { useAuth } from "../../components/ContextProvider";
+
 export default function Login() {
+
+  const { login } = useAuth();
   const [formData, setFormData] = useState<userReq>({
     email: "",
     password: "",
@@ -18,9 +22,11 @@ export default function Login() {
 
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
-    let token = await login(formData);
+    let token = await loginUser(formData);
+
 
     if (token) {
+      login(jwtDecode(token) as any);
       console.log("Login successful, token:", token);
       let userData = jwtDecode(token) as any;
       console.log("Decoded user data:", userData);

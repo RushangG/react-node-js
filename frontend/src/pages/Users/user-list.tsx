@@ -61,7 +61,7 @@ export default function UserList() {
                 {user.products.length}
               </th>
               <th className="border border-gray-300 px-4 py-2">
-                {user.roles.map((role: any) => (
+                {user.UsersRoles.map((role: any) => (
                   <span key={role.id}> {role.name} , </span>
                 ))}
               </th>

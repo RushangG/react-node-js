@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UsersRolesService } from './users-roles.service';
 import { CreateUsersRoleDto } from './dto/create-users-role.dto';
 import { UpdateUsersRoleDto } from './dto/update-users-role.dto';
+import { Public } from 'src/auth/public.decorator';
 
 @Controller('users-roles')
 export class UsersRolesController {
@@ -32,7 +33,7 @@ export class UsersRolesController {
     return this.usersRolesService.remove(+id);
   }
 
-
+  @Public()
   @Post('user-roles-update')
   updateUserRoles(@Body() body: { userId: number; rolesId: number[] }) {
     const { userId, rolesId } = body;

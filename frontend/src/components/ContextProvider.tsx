@@ -21,7 +21,9 @@ export const AuthContext = createContext<AuthContextProps>({
   logout: () => {},
 });
 
-export default function ContextProvider(children: React.ReactNode) {
+export default function ContextProvider({ children, } : {
+  children: React.ReactNode;
+}) {
   const [user, setUser] = useState<user | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
@@ -52,11 +54,28 @@ export default function ContextProvider(children: React.ReactNode) {
     setUser(null);
   };
 
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+    return (
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        user,
+        login,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 }
 
-export const useAuth = () => useContext(AuthContext);
+export function useAuth() {
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error(
+      "useAuth must be used inside AuthProvider"
+    );
+  }
+
+  return context;
+}

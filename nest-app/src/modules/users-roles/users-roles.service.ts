@@ -35,7 +35,14 @@ export class UsersRolesService {
         `SELECT update_user_roles($1, $2::integer[])`,
         [userId, rolesId],
       );
-      return { message: 'User roles updated successfully' };
+      
+      let updatedRoles = await this.entityManager.query(
+        `SELECT * FROM users_roles WHERE "userId" = $1`,
+        [userId],
+      );
+
+      return updatedRoles;
+
     } catch (error) {
       throw new ConflictException('Error updating user roles: ' + error);
     }
