@@ -56,7 +56,7 @@ export class UsersController {
     return this.usersService.userRoleCreate(userId, roleId);
   }
 
-  @Public()
+
   @Post('user-roles-update')
   updateUserRoles(@Body() body: { userId: number; rolesId: number[] }) {
     const { userId, rolesId } = body;

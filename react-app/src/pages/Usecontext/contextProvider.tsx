@@ -13,7 +13,7 @@ interface UserContextType {
 }
 
 
-const UserContext = createContext<UserContextType | null>(null);
+export const UserContext = createContext<UserContextType | null>(null);
 
 export default function ContextProvider( {child} : {child: React.ReactNode}) {
 

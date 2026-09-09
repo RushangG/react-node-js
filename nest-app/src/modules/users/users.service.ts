@@ -40,7 +40,7 @@ export class UsersService {
     const users = await this.usersRepos.find({
       relations: {
         products: true, // Assuming you have a relation named 'products' in the Users entity
-        roles: true, // Assuming you have a relation named 'roles' in the Users entity
+        UsersRoles: true, // Assuming you have a relation named 'roles' in the Users entity
       },
     });
 
@@ -55,7 +55,7 @@ export class UsersService {
     const user = await this.usersRepos.findOne({
       relations: {
         products: true,
-        roles: true,
+        UsersRoles: true,
       },
       where: { id: id },
     });
@@ -108,28 +108,24 @@ export class UsersService {
     }
   }
 
-
   async userRolesUpdate(userId: number, rolesId: number[]) {
     try {
       await this.entityManager.delete('users_roles', { usersId: userId });
-  
+
       let userRoleRepo = await this.entityManager
         .createQueryBuilder()
         .insert()
         .into('users_roles')
         .values(rolesId.map((roleId) => ({ usersId: userId, rolesId: roleId })))
         .execute();
+
       return userRoleRepo;
     } catch (error) {
       throw new ConflictException('Error updating user roles: ' + error);
     }
   }
 
-  
  
-
-
-
   async userRoleDelete(userId: number, roleId: number) {
     let userRoleRepo = await this.entityManager
       .createQueryBuilder()

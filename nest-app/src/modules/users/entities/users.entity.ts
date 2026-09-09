@@ -12,6 +12,7 @@ import {
   JoinColumn,
   JoinTable,
 } from 'typeorm';
+import { UsersRoles } from 'src/modules/users-roles/entities/users-roles.entity';
 
 @Entity()
 export class Users {
@@ -36,9 +37,8 @@ export class Users {
   @OneToMany(() => Product, (product) => product.user_id)
   products: Product[];
 
-  @ManyToMany(() => Roles)
-  @JoinTable({ name: 'users_roles' })
-  roles: Roles[];
+  @OneToMany(() => UsersRoles, (usersRoles) => usersRoles.userId)
+  UsersRoles: UsersRoles[];
 
   @Column({ type: 'varchar', nullable: true })
   hashedRefreshToken: string | null;

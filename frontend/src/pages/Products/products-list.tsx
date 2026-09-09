@@ -34,7 +34,7 @@ export default function ProductsList() {
   async function handleDeleteProduct(productId: number) {
     if (confirm("Are you sure you want to delete this product?")) {
       await deleteProduct(productId);
-      fetchProducts(); // Refresh the product list after deletion
+      fetchProducts(); 
     }
   }
 

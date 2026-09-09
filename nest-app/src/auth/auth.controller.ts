@@ -87,4 +87,9 @@ export class AuthController {
 
     return { message: 'Logout successful' };
   }
+
+  @Get('verify-token')
+  async getUserFromToken(@Req() req) {
+    return { user: req.user };
+  }
 }

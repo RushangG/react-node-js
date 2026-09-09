@@ -1,6 +1,5 @@
-
 import apiClient from "./api-client";
-
+import ContextProvider from "../components/ContextProvider";
 import { jwtDecode } from "jwt-decode";
 
 //get the user id from the token
@@ -33,6 +32,7 @@ export async function login(req: userReq) {
     console.log("login response", res.data);
 
     localStorage.setItem("authToken", res.data.token);
+
     return res.data.token;
   } catch (error) {
     console.error("Login error:", error);
@@ -64,7 +64,6 @@ export async function logout() {
     if (res.status === 200) {
       console.log("Logout successful");
       localStorage.removeItem("authToken");
-      
     }
     return true;
   } catch (error) {
