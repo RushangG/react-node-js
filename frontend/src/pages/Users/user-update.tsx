@@ -17,11 +17,12 @@ export default function UserUpdate() {
   const [user, setUser] = useState({
     name: "",
     email: "",
-    roles: [],
+    UsersRoles: [],
   });
 
   async function fetchUserData(userId: number) {
     const data = await getById(userId);
+
     console.log("user data", data);
     setUser(data);
     console.log("response", data);
@@ -46,6 +47,15 @@ export default function UserUpdate() {
 
   return (
     <div>
+      <span className="flex justify-end mb-4">
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+          onClick={() => navigate("/user-role")}
+        >
+          Assign Role
+        </button>
+      </span>
+
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-2 w-80 mx-auto mt-4">
           <label htmlFor="user">User Name :</label>
@@ -70,15 +80,18 @@ export default function UserUpdate() {
             required
           />
 
-          <label htmlFor="roles">Role Name :</label>
+          <label htmlFor="roles">Role Name : </label>
           <div className="flex flex-col gap-2">
-            {user.roles.map((role: any) => (
+            {user.UsersRoles.length === 0 && (
+              <p className="text-gray-500">No roles assigned , Assign Roles</p>
+            )}
+            {user.UsersRoles.map((role: any) => (
               <span
-                key={role.id}
+                key={role.roleId.id}
                 className="border rounded p-2"
-                onClick={() => handleDeleteRole(role.id)}
+                onClick={() => handleDeleteRole(role.roleId.id)}
               >
-                {role.name}{" "}
+                {role.roleId.name}{" "}
                 <span className="text-red-500 cursor-pointer">[Delete]</span>
               </span>
             ))}

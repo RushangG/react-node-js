@@ -1,24 +1,21 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProductsByUserId, deleteProduct } from "../../Apis/products-api";
-import { jwtDecode } from "jwt-decode";
+import { useAuth } from "../../components/ContextProvider";
+
 export default function ProductsList() {
   const navigate = useNavigate();
 
   const [products, setProducts] = useState();
-
-  //get the user id from the token
-  const token = localStorage.getItem("authToken");
-  const decodedToken: any = jwtDecode(token as string);
-  // console.log("decodedToken", decodedToken);
-  const userId = decodedToken.id;
+  const { user } = useAuth();
+  const userId = user?.id;
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
   async function fetchProducts() {
-    const data = await getProductsByUserId(userId);
+    const data = await getProductsByUserId(userId as number);
     setProducts(data);
     console.log("response", data);
   }
@@ -34,7 +31,7 @@ export default function ProductsList() {
   async function handleDeleteProduct(productId: number) {
     if (confirm("Are you sure you want to delete this product?")) {
       await deleteProduct(productId);
-      fetchProducts(); 
+      fetchProducts();
     }
   }
 

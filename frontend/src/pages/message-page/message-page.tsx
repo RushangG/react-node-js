@@ -1,23 +1,15 @@
 import { useState, useEffect } from "react";
 import { socket } from "../../Apis/message-api";
-import { jwtDecode } from "jwt-decode";
+import { useAuth } from "../../components/ContextProvider";
+
 export default function MessagePage() {
   const [messages, setMessages] = useState<string[]>();
+  const { user } = useAuth();
 
-  //get the user id from the token
-  const token = localStorage.getItem("authToken");
-  let userEmail: null;
-
-  if (!token) {
-    // console.log("No auth token found in local storage");
-  } else {
-    const decodedToken: any = jwtDecode(token as string);
-    // console.log("decodedToken", decodedToken);
-
-    userEmail = decodedToken?.email;
-  }
+  const userName = user?.name;
 
   useEffect(() => {
+    socket.connect();
     socket.on("room", (message) => {
       console.log("Received message:", message);
       setMessages((prevMessages) => [
@@ -27,6 +19,7 @@ export default function MessagePage() {
     });
 
     return () => {
+      socket.disconnect();
       socket.off("room");
     };
   }, []);
@@ -37,7 +30,7 @@ export default function MessagePage() {
     const message = messageInput?.value;
 
     if (message) {
-      socket.emit("message", userEmail + ": " + message);
+      socket.emit("message", userName + ": " + message);
 
       setMessages((prevMessages) => [
         ...(prevMessages || []),

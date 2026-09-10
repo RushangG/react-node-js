@@ -1,24 +1,11 @@
 import apiClient from "./api-client";
-import { jwtDecode } from "jwt-decode";
 interface Product {
   name: string;
   description: string;
   price: number;
   stock: number;
-}
+} 
 
-//get the user id from the token
-const token = localStorage.getItem("authToken");
-let userId: null;
-
-if (!token) {
-  // console.log("No auth token found in local storage");
-} else {
-  const decodedToken: any = jwtDecode(token as string);
-  // console.log("decodedToken", decodedToken);
-
-  userId = decodedToken?.id;
-}
 
 export async function getProducts() {
   const products = await apiClient.get("/products");
@@ -30,7 +17,7 @@ export async function getProductsByUserId(userId: number) {
   return products.data;
 }
 
-export async function addProduct(product: Product) {
+export async function addProduct(product: Product, userId: number) {
   // console.log("userId in addProduct:", userId); // Log the userId
   let productWithUserId = {
     ...product,

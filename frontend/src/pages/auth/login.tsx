@@ -1,17 +1,21 @@
 import { useState, useEffect } from "react";
 import { loginUser, type userReq } from "../../Apis/auth-api";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../../components/ContextProvider";
 
 export default function Login() {
-
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const [formData, setFormData] = useState<userReq>({
     email: "",
     password: "",
   });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/ProductsList");
+    }
+  }, [isAuthenticated]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setFormData({
@@ -22,14 +26,10 @@ export default function Login() {
 
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
-    let token = await loginUser(formData);
-
-
-    if (token) {
-      login(jwtDecode(token) as any);
-      console.log("Login successful, token:", token);
-      let userData = jwtDecode(token) as any;
-      console.log("Decoded user data:", userData);
+    const resData = await loginUser(formData);
+    const userData = resData.user;
+    if (resData) {
+      login(userData);
       if (userData.role === "admin") {
         navigate("/users-list");
       } else {

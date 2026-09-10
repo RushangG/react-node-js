@@ -1,8 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { register } from "../../Apis/auth-api";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../components/ContextProvider";
 export default function Register() {
+  const { isAuthenticated } = useAuth();
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/ProductsList");
+    }
+  }, [isAuthenticated]);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -20,6 +29,18 @@ export default function Register() {
 
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    if (formData.password) {
+      let regex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&])[A-Za-z\d@.#$!%*?&]{8,15}$/;
+      if (!regex.test(formData.password)) {
+        alert(
+          "Password must be long 8-15 with special character, uppercase, lowercase and number",
+        );
+        return;
+      }
+    }
+
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
       return;
@@ -34,8 +55,8 @@ export default function Register() {
     let result = await register(userData);
 
     if (result) {
-    alert("Registration successful! Please log in.");
-    navigate("/login");
+      alert("Registration successful! Please log in.");
+      navigate("/login");
     } else {
       alert("Registration failed. Please try again.");
     }

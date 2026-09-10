@@ -1,19 +1,12 @@
 import { Outlet } from "react-router-dom";
-import { logout } from "../Apis/auth-api";
+import { logoutUser } from "../Apis/auth-api";
 import { useNavigate, Link } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
-export default function LayoutPage() {
-  const navigate = useNavigate();
-  let userRole = "";
-  const userValue = localStorage.getItem("authToken");
-  if (!userValue) {
-    console.error("Invalid token or missing role");
-    return null; // or handle the error as needed
-  } else {
-    const decodedToken: any = jwtDecode(userValue as string);
+import { useAuth } from "./ContextProvider";
 
-    userRole = decodedToken.role;
-  }
+export default function LayoutPage() {
+  const { logout, user } = useAuth();
+  const navigate = useNavigate();
+  let userRole = user?.role;
 
   function NavLink() {
     return (
@@ -38,8 +31,9 @@ export default function LayoutPage() {
   }
 
   async function handleLogout() {
-    const result = await logout();
+    const result = await logoutUser();
     if (result) {
+      logout();
       console.log("layout Logout successful");
       navigate("/login");
     }

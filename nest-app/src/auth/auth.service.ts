@@ -1,6 +1,7 @@
 import {
   ForbiddenException,
   Injectable,
+  Req,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Users } from '../modules/users/entities/users.entity';
@@ -55,7 +56,12 @@ export class AuthService {
   }
 
   async getAccessToken(userId: number, email: string, role: string) {
-    const jwtPayload = { id: userId, email: email, role: role };
+    let user = await this.userRepo.find({
+      where: { id: userId },
+    });
+
+    let userName = user[0].name;
+    const jwtPayload = { id: userId, email: email, role: role, name: userName };
     const accessToken = await this.jwtService.sign(jwtPayload, {
       secret: process.env.JWT_SECRET,
       expiresIn: '1d',
@@ -79,8 +85,8 @@ export class AuthService {
   }
 
   async getTokens(userId: number, email: string, role: string) {
-    console.log('jwtsecret', process.env.JWT_SECRET);
-    console.log('jwtrefreshsecret', process.env.JWT_REFRESH_SECRET);
+    // console.log('jwtsecret', process.env.JWT_SECRET);
+    // console.log('jwtrefreshsecret', process.env.JWT_REFRESH_SECRET);
 
     const accessToken = await this.getAccessToken(userId, email, role);
 

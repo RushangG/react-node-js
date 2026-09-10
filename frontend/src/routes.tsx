@@ -17,7 +17,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="/ProductsList" />,
+        element: <Navigate to="/productsList" />,
       },
       {
         path: "/Login",
@@ -27,7 +27,7 @@ const router = createBrowserRouter([
         path: "/register",
         element: <Register />,
       },
-     
+
       {
         element: <ProtectedRoutes />,
 
@@ -67,6 +67,4 @@ const router = createBrowserRouter([
   },
 ]);
 
-
-
-export default  router;
+export default router;

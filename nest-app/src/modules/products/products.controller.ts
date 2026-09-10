@@ -38,7 +38,7 @@ export class ProductsController {
   // @Roles('admin') // only admin access.
   // @UseGuards(RoleGuard)
   findAll(@CurrentUser() user: any) {
-    // console.log('Current User:', user); // Log the current user information
+    // console.log('Current User:', user); 
     return this.productsService.findAll();
   }
 

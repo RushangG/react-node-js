@@ -11,11 +11,11 @@ import bcrypt from "bcrypt";
 import argon2 from "argon2";
 const app = express();
 
-// console.log(__dirname);
-// console.log(`Current directory: ${path.resolve()}`);
 app.use(morgan('dev')); // Log HTTP requests to the console
-// remove response headers.
+
+
 app.use(helmet());
+
 // Middleware to parse JSON request bodies
 app.use(express.json());
 app.use(cors({

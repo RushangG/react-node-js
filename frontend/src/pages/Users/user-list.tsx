@@ -5,7 +5,7 @@ export default function UserList() {
   const [users, setUsers] = useState([]);
 
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -18,14 +18,14 @@ export default function UserList() {
 
   async function handleUpdate(userId: string) {
     // Implementation for updating a user
-    navigate("/user-update", { state: {  userId } });
+    navigate("/user-update", { state: { userId } });
   }
 
   async function handleDelete(userId: string) {
-    // Implementation for deleting a user
+    
     if (confirm("Are you sure want to delete this user ? ")) {
       await deleteUser(Number(userId));
-      fetchUsers(); // Refresh the user list after deletion
+      fetchUsers(); 
     }
   }
 
@@ -62,7 +62,7 @@ export default function UserList() {
               </th>
               <th className="border border-gray-300 px-4 py-2">
                 {user.UsersRoles.map((role: any) => (
-                  <span key={role.id}> {role.name} , </span>
+                  <span key={role.id}> {role.roleId.name} , </span>
                 ))}
               </th>
               <th className="border border-gray-300 px-4 py-2">

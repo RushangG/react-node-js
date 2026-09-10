@@ -19,7 +19,7 @@ export class CreateUserRoleUpdateFunction1788949718267 implements MigrationInter
                 from unnest(new_role_ids) as role_id
                 on conflict ("userId", "roleId") do nothing;
 				End;
-             $$
+             $$;
 
         `);
   }

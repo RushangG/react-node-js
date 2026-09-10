@@ -41,7 +41,7 @@ export default function UserList() {
   }
 
   // console.log("UserList users:", users);
-  function handleSerchChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
     const searchTerm = e.target.value;
 
     if (searchTerm.trim() !== "") {
@@ -79,7 +79,7 @@ export default function UserList() {
           type="text"
           placeholder="Search users..."
           value={searchParams.get("search") || ""}
-          onChange={handleSerchChange}
+          onChange={handleSearchChange}
           className="border border-gray-300 rounded-md p-2 w-32"
         />
 

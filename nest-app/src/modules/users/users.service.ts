@@ -39,8 +39,11 @@ export class UsersService {
   async findAll() {
     const users = await this.usersRepos.find({
       relations: {
-        products: true, // Assuming you have a relation named 'products' in the Users entity
-        UsersRoles: true, // Assuming you have a relation named 'roles' in the Users entity
+        products: true,
+
+        UsersRoles: {
+          roleId: true,
+        },
       },
     });
 
@@ -55,7 +58,9 @@ export class UsersService {
     const user = await this.usersRepos.findOne({
       relations: {
         products: true,
-        UsersRoles: true,
+        UsersRoles: {
+          roleId: true,
+        },
       },
       where: { id: id },
     });
@@ -99,7 +104,7 @@ export class UsersService {
         .createQueryBuilder()
         .insert()
         .into('users_roles')
-        .values({ usersId: userId, rolesId: roleId })
+        .values({ userId: userId, roleId: roleId })
         .execute();
       // console.log('userRoleCreate result:', userRoleRepo); // Log the result of the save operation
       return userRoleRepo;
@@ -125,16 +130,15 @@ export class UsersService {
     }
   }
 
- 
   async userRoleDelete(userId: number, roleId: number) {
     let userRoleRepo = await this.entityManager
       .createQueryBuilder()
       .select('*')
       .from('users_roles', 'users_roles')
-      .where(' "usersId" = :userId AND "rolesId" = :roleId', { userId, roleId })
+      .where(' "userId" = :userId AND "roleId" = :roleId', { userId, roleId })
       .getRawMany();
 
-    // console.log('userRoleDelete result:', userRoleRepo); // Log the result of the save operation
+    // console.log('userRoleDelete', userRoleRepo);
     if (!userRoleRepo || userRoleRepo.length === 0) {
       throw new NotFoundException('User role not found');
     }
@@ -144,7 +148,7 @@ export class UsersService {
         .createQueryBuilder()
         .delete()
         .from('users_roles')
-        .where('usersId = :userId AND rolesId = :roleId', { userId, roleId })
+        .where('userId = :userId AND roleId = :roleId', { userId, roleId })
         .execute();
 
       return 'User role deleted successfully';

@@ -49,7 +49,18 @@ export class AuthController {
       sameSite: 'strict',
     });
 
-    return { message: 'Login successful', token: token.accessToken };
+    let userData = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    };
+
+    return {
+      message: 'Login successful',
+      token: token.accessToken,
+      user: userData,
+    };
   }
 
   @Public()
@@ -59,8 +70,8 @@ export class AuthController {
     @Req() req,
     @Res({ passthrough: true }) response: Response,
   ) {
-    console.log('Request user:', req.user); // Log the request object to see what is being received
-
+    // console.log('Request user:', req.user);
+    // console.log('Request cookies:', req.cookies);
     const userId = req.user.id;
     const refreshTokens = req.cookies['refreshToken'];
 

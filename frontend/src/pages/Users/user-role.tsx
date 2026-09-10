@@ -23,7 +23,7 @@ export default function UserRole() {
 
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
-    // Handle form submission
+    
 
     let userId = e.target.user.value;
     let roleId = e.target.roles.value;
