@@ -38,13 +38,13 @@ export class ProductsController {
   // @Roles('admin') // only admin access.
   // @UseGuards(RoleGuard)
   findAll(@CurrentUser() user: any) {
-    // console.log('Current User:', user); 
+    // console.log('Current User:', user);
     return this.productsService.findAll();
   }
 
   @Get(':id')
   @UsePipes(ValidationPipe)
-  // @Roles('user') // Only user access.
+  // @Roles('user', 'admin') // Only user access.
   // @UseGuards(RoleGuard)
   findOne(@Param('id') id: string) {
     return this.productsService.findOne(Number(id));

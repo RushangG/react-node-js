@@ -23,15 +23,13 @@ export default function UserUpdate() {
   async function fetchUserData(userId: number) {
     const data = await getById(userId);
 
-    console.log("user data", data);
     setUser(data);
-    console.log("response", data);
   }
 
   async function handleDeleteRole(roleId: number) {
     if (confirm("Are you sure want to delete this role from user ? ")) {
       await deleteRoleFromUser(userId, roleId);
-      fetchUserData(userId); // Refresh the user data after deletion
+      fetchUserData(userId);
     }
   }
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
@@ -85,7 +83,7 @@ export default function UserUpdate() {
             {user.UsersRoles.length === 0 && (
               <p className="text-gray-500">No roles assigned , Assign Roles</p>
             )}
-            {user.UsersRoles.map((role: any) => (
+            {user.UsersRoles?.map((role: any) => (
               <span
                 key={role.roleId.id}
                 className="border rounded p-2"

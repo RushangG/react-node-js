@@ -22,16 +22,15 @@ export default function UserList() {
   }
 
   async function handleDelete(userId: string) {
-    
     if (confirm("Are you sure want to delete this user ? ")) {
       await deleteUser(Number(userId));
-      fetchUsers(); 
+      fetchUsers();
     }
   }
 
   return (
     <div>
-      <h1>User List</h1>
+      <h1 className="text-2xl font-bold mb-4">User List</h1>
 
       <span className="flex justify-end mb-4">
         <button
@@ -65,15 +64,15 @@ export default function UserList() {
                   <span key={role.id}> {role.roleId.name} , </span>
                 ))}
               </th>
-              <th className="border border-gray-300 px-4 py-2">
+              <th className="border border-gray-300 px-2 py-2">
                 <button
-                  className="bg-green-400 text-white px-4 py-2 rounded mr-2 cursor-pointer"
+                  className="bg-green-400 text-white px-2 py-2 rounded mr-2 cursor-pointer"
                   onClick={() => handleUpdate(user.id)}
                 >
                   Update
                 </button>
                 <button
-                  className="bg-red-400 text-white px-4 py-2 rounded cursor-pointer"
+                  className="bg-red-400 text-white px-2 py-2 rounded cursor-pointer"
                   onClick={() => handleDelete(user.id)}
                 >
                   Delete

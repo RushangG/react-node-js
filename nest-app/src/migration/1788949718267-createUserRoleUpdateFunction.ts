@@ -3,7 +3,7 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 export class CreateUserRoleUpdateFunction1788949718267 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-           CREATE OR REPLACE FUNCTION update_user_roles(user_id INT, new_role_ids INT[]) 
+           CREATE OR REPLACE FUNCTION modify_user_roles(user_id INT, new_role_ids INT[]) 
             returns void 
             LANGUAGE plpgsql AS
              $$

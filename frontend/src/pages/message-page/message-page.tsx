@@ -63,10 +63,13 @@ export default function MessagePage() {
           className="flex flex-col items-center"
         >
           <textarea
-            className="border border-gray-300 rounded-md p-2"
+            className="border border-gray-300 rounded-md p-2 w-96"
             placeholder="Enter your message"
           ></textarea>
-          <button className="border " type="submit">
+          <button
+            className="border mt-2 bg-green-400 rounded p-2"
+            type="submit"
+          >
             Send
           </button>
         </form>

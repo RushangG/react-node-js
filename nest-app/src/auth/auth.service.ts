@@ -10,11 +10,15 @@ import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 import { CreateUserDto } from '../modules/users/dto/create-user.dto';
+import { AuthUserSession } from '../modules/auth-user-session/entities/auth-user-session.entity';
+
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(Users)
     private userRepo: Repository<Users>,
+    @InjectRepository(AuthUserSession)
+    private authUserSessionRepo: Repository<AuthUserSession>,
     private jwtService: JwtService,
   ) {}
 
@@ -52,6 +56,7 @@ export class AuthService {
 
   // logout
   async logout(userId: number) {
+    await this.authUserSessionRepo.delete({ userId: { id: userId } });
     await this.userRepo.update({ id: userId }, { hashedRefreshToken: null });
   }
 
@@ -91,6 +96,21 @@ export class AuthService {
     const accessToken = await this.getAccessToken(userId, email, role);
 
     const refreshToken = await this.getRefreshToken(userId, email, role);
+
+    let hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    let hashedAccessToken = await bcrypt.hash(accessToken, 10);
+
+    let authSession = {
+      userId: { id: userId },
+      accessToken: hashedAccessToken,
+      accessTokenExpiry: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
+      refreshToken: hashedRefreshToken,
+      refreshTokenExpiry: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days
+    };
+
+    let userAuthSession = await this.authUserSessionRepo.create(authSession);
+
+    await this.authUserSessionRepo.save(userAuthSession);
 
     return { accessToken, refreshToken };
   }

@@ -1,5 +1,4 @@
 import axios from "axios";
-import router from "../routes";
 const BASE_URL = "http://localhost:3000/api/v1";
 
 const apiClient = axios.create({
@@ -51,8 +50,9 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest);
       } catch (refreshError) {
         localStorage.removeItem("authToken");
+
         // Redirect to login page
-        router.navigate("/login");
+        window.location.href = "/login";
         console.error("Unauthorized access - redirecting to login.");
 
         return Promise.reject(refreshError);

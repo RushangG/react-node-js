@@ -32,17 +32,16 @@ export class UsersRolesService {
   async userRolesUpdate(userId: number, rolesId: number[]) {
     try {
       await this.entityManager.query(
-        `SELECT update_user_roles($1, $2::integer[])`,
+        `SELECT modify_user_roles($1, $2::integer[])`,
         [userId, rolesId],
       );
-      
+
       let updatedRoles = await this.entityManager.query(
         `SELECT * FROM users_roles WHERE "userId" = $1`,
         [userId],
       );
 
       return updatedRoles;
-
     } catch (error) {
       throw new ConflictException('Error updating user roles: ' + error);
     }

@@ -27,6 +27,7 @@ import { RolesModule } from './modules/roles/roles.module';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { FileUploadModule } from './modules/file-upload/file-upload.module';
 import { UsersRolesModule } from './modules/users-roles/users-roles.module';
+import { AuthUserSessionModule } from './modules/auth-user-session/auth-user-session.module';
 
 @Module({
   imports: [
@@ -38,6 +39,8 @@ import { UsersRolesModule } from './modules/users-roles/users-roles.module';
     RolesModule,
     FileUploadModule,
     UsersRolesModule,
+    AuthUserSessionModule,
+
     // for module base router
     RouterModule.register([
       {
@@ -49,9 +52,11 @@ import { UsersRolesModule } from './modules/users-roles/users-roles.module';
           { path: '', module: RolesModule },
           { path: '', module: FileUploadModule },
           { path: '', module: UsersRolesModule },
+          { path: '', module: AuthUserSessionModule },
         ],
       },
     ]),
+  
 
     // ThrottlerModule.forRoot({
     //   throttlers: [

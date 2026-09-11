@@ -8,10 +8,14 @@ import {
 import { Reflector } from '@nestjs/core'; // use for reading metadata(public decorator).
 import { JwtService } from '@nestjs/jwt';
 import { IS_PUBLIC_KEY } from './public.decorator';
+import { AuthUserSessionService } from '../modules/auth-user-session/auth-user-session.service';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  constructor(
+    private reflector: Reflector,
+    private authUserSessionService: AuthUserSessionService,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // console.log('context.getHandler():', context.getHandler());
@@ -33,7 +37,7 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     const req = context.switchToHttp().getRequest();
-    
+
     const authHeader = req.headers['authorization'];
 
     if (!authHeader) {
@@ -54,6 +58,17 @@ export class JwtAuthGuard implements CanActivate {
         secret: process.env.JWT_SECRET,
       });
       req.user = decodedPayload;
+      let userId = req.user.id;
+
+      let verifyAccessToken =
+        await this.authUserSessionService.verifyAccessToken(userId, token);
+      // if (!verifyAccessToken) {
+      //   throw new UnauthorizedException(
+      //     'Invalid access token not found in database',
+      //   );
+      // }
+      console.log('verifyAccessToken:', verifyAccessToken);
+
       // console.log('user', req.user);
       return true;
     } catch (error) {
