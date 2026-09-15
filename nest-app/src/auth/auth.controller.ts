@@ -89,8 +89,8 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
     @Req() req,
   ) {
-    //   console.log('Logout request body:', body); // Log the request body to see what is being sent
-    // // Log the request object to see what is being received
+    //   console.log('Logout request body:', body); 
+    
     console.log('req.user:', req.user);
     await this.authService.logout(req.user.id);
 

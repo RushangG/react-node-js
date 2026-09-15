@@ -108,9 +108,27 @@ export class AuthService {
       refreshTokenExpiry: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days
     };
 
-    let userAuthSession = await this.authUserSessionRepo.create(authSession);
+    let checkSession = await this.authUserSessionRepo.findOne({
+      relations: {
+        userId: true,
+      },
+      where: {
+        userId: { id: userId },
+      },
+    });
+    console.log('checkSession', checkSession);
 
-    await this.authUserSessionRepo.save(userAuthSession);
+    if (!checkSession) {
+      let userAuthSession = await this.authUserSessionRepo.create(authSession);
+
+      await this.authUserSessionRepo.save(userAuthSession);
+    } else {
+      let authId = checkSession.id;
+      await this.authUserSessionRepo.update(authId, {
+        ...authSession,
+        userId: { id: userId },
+      });
+    }
 
     return { accessToken, refreshToken };
   }
@@ -144,6 +162,14 @@ export class AuthService {
       user.role,
     );
 
+    let hashedAccessToken = await bcrypt.hash(accessTokens, 10);
+
+    let authUpdate = await this.authUserSessionRepo.update(
+      { userId: { id: userId } },
+      { accessToken: hashedAccessToken },
+    );
+
+    console.log('authUpdate', authUpdate);
     return accessTokens;
   }
 }

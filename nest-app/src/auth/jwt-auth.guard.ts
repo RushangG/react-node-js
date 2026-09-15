@@ -62,12 +62,13 @@ export class JwtAuthGuard implements CanActivate {
 
       let verifyAccessToken =
         await this.authUserSessionService.verifyAccessToken(userId, token);
-      // if (!verifyAccessToken) {
-      //   throw new UnauthorizedException(
-      //     'Invalid access token not found in database',
-      //   );
-      // }
+
       console.log('verifyAccessToken:', verifyAccessToken);
+      if (!verifyAccessToken) {
+        throw new UnauthorizedException(
+          'Invalid access token not found in database',
+        );
+      }
 
       // console.log('user', req.user);
       return true;
