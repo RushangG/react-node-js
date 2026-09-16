@@ -12,7 +12,7 @@ import { AuthUserSessionService } from '../modules/auth-user-session/auth-user-s
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(
+  constructor (
     private reflector: Reflector,
     private authUserSessionService: AuthUserSessionService,
   ) {}
