@@ -14,6 +14,8 @@ import FirstPage from './FirstPage.jsx';
 import Home from './Home.jsx';
 import About from './About.jsx';
 import Layout from './layout.jsx';
+import Login from './pages/Login.jsx'
+
 import {
   createBrowserRouter,
   RouterProvider,
@@ -29,6 +31,10 @@ const router = createBrowserRouter([
     element: <Layout />,
     errorElement : <ErrorPage />,
     children: [
+      {
+        path: "/",
+        element:<FirstPage />
+      },
       {
         path: "Home",
         element: <Home/>
@@ -50,9 +56,10 @@ const router = createBrowserRouter([
         element: <Counter />
       },
       {
-        path: "/",
-        element:<FirstPage />
+        path: "Login",
+        element: <Login />
       }
+    
     ],
   },
 ]);

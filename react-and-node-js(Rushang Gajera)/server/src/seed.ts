@@ -18,7 +18,7 @@ async function bootstrap() {
   }
 
   let userRepo = AppDataSource.getRepository(Users);
-  let nameRepo = AppDataSource.getRepository(Name);
+  let nameRepo = AppDataSource.getRepository(Name);  
 
   let user = await userRepo.find();
 

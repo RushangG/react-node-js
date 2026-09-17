@@ -39,6 +39,10 @@ export default function Layout(){
               <NavLink
                 style={({ isActive }) => { return { fontWeight: isActive ? "bold" : "" }; }}
                 to={'/'}>FirstPage</NavLink>
+
+               <NavLink
+                style={({ isActive }) => { return { fontWeight: isActive ? "bold" : "" }; }}
+                to={'/Login'}>Login</NavLink>
           
           
         </nav>

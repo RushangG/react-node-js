@@ -12,12 +12,21 @@ import { UsersModule } from './users/users.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppDataSource } from './data-source';
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import { PassportModule } from '@nestjs/passport';
+
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({ ...AppDataSource.options }),
+    PassportModule.register({
+      defaultStrategy: 'jwt',
+    }),
     NameModule,
     MessageModule,
     UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

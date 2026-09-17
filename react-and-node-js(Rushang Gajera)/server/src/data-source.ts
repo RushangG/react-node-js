@@ -11,6 +11,6 @@ export const AppDataSource = new DataSource({
   password: 'postgres',
   database: 'examdb',
   synchronize: true,
-  logging: true,
+  logging: false,
   entities: [Users, Name, Message],
 });
