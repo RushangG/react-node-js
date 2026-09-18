@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { getName } from "./api/Names";
-
+import { useAuth } from "./pages/ContextProvider";
 export default function Name() {
   const { user } = useAuth();
 

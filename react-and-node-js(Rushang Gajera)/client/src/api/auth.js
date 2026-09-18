@@ -1,12 +1,16 @@
-import apiClinet from "./axiosClient";
+import apiClient from "./axiosClient";
 
 export async function LoginUser(username, password) {
-    console.log("formdata", username, password);
-    let data = await apiClinet.post(`auth/login`, {
-        username, password
-    })
 
-    localStorage.setItem("token", JSON.stringify(data.data));
+  console.log("formdata", username, password);
 
-    return data.data;
+  const response = await apiClient.post(
+    "/auth/login",
+    {
+      username,
+      password,
+    }
+  );
+
+  return response.data;
 }

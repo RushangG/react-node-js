@@ -1,9 +1,9 @@
 
-import apiClinet from "./axiosClient";
+import apiClient from "./axiosClient";
 
 export async function getName() {
 
-    let data = await apiClinet.get('/name');
+    let data = await apiClient.get('/name');
 
     return data;
 }

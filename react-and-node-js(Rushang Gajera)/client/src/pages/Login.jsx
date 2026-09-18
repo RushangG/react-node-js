@@ -1,8 +1,12 @@
 import { useState } from "react";
 import "../App.css";
 import { LoginUser } from "../api/auth";
+import { useAuth } from "../pages/ContextProvider";
 
 export default function Login() {
+
+  const { Login, isLoading } = useAuth();
+const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -18,11 +22,22 @@ export default function Login() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    let username = formData.username;
-    let password = formData.password;
 
-    let data = await LoginUser(username, password);
-    console.log("login", data);
+  setError("");
+  try {
+    await Login(
+      formData.username,
+      formData.password
+    );
+   
+  } catch (error) {
+
+    setError(
+      error.response?.data?.message ||
+      "Login failed"
+    );
+
+  }
 
     setFormData({
       username: "",
@@ -54,6 +69,13 @@ export default function Login() {
             placeholder="Enter Email"
             required
           />
+
+
+          {error && (
+            <p style={{ color: "red" }}>
+              {error}
+            </p>
+          )}
 
           <button type="submit"> Submit </button>
         </form>
