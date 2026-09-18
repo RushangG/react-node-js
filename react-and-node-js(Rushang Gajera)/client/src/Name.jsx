@@ -1,27 +1,31 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { getName } from "./api/Names";
+import { getName, saveName } from "./api/Names";
 import { useAuth } from "./pages/ContextProvider";
 export default function Name() {
   const { user } = useAuth();
 
-  async function getNameData() {
-    let names = await getName();
-    console.log("names", names.data);
-    console.log("user context", user);
-  }
 
-  useEffect(() => {
-    getNameData();
-  }, []);
 
-  const List = [];
-  const [userList, setUserList] = useState(List);
+
+  const [userList, setUserList] = useState();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     course: "",
   });
+
+  async function getNameData() {
+    let names = await getName();
+    console.log("names", names.data);
+    console.log("user context", user);
+    setUserList(names.data);
+
+  }
+
+  useEffect(() => {
+    getNameData();
+  }, []);
 
   function handleOnChange(e) {
     setFormData({
@@ -30,19 +34,14 @@ export default function Name() {
     });
   }
 
-  function handleSubmit(e) {
+
+
+  async function handleSubmit(e) {
     e.preventDefault();
 
-    setUserList([
-      ...userList,
-      {
-        id: Math.random(),
-        name: formData.name,
-        email: formData.email,
-        course: formData.course,
-      },
-    ]);
+     let data = await saveName(formData);
 
+     getNameData();
     setFormData({
       name: "",
       email: "",
@@ -95,7 +94,7 @@ export default function Name() {
       </div>
 
       <div id="center">
-        {userList.length === 0 ? (
+        {userList === undefined ? (
           "No Name Register yet"
         ) : (
           <table>

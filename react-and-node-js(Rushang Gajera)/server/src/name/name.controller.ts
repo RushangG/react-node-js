@@ -15,9 +15,10 @@ import { NameService } from './name.service';
 import { CreateNameDto } from './dto/create-name.dto';
 import { UpdateNameDto } from './dto/update-name.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 @Controller('name')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class NameController {
   constructor(private readonly nameService: NameService) {}
 
@@ -35,6 +36,7 @@ export class NameController {
   }
 
   @Get()
+  @Roles('admin')
   findAll(@Req() req: any) {
     let userId = req.user.userId;
     return this.nameService.findAll(userId);

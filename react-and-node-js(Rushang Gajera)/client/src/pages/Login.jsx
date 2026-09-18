@@ -2,10 +2,12 @@ import { useState } from "react";
 import "../App.css";
 import { LoginUser } from "../api/auth";
 import { useAuth } from "../pages/ContextProvider";
-
+import { useNavigate } from "react-router-dom";
 export default function Login() {
 
+  const navigate = useNavigate(); 
   const { Login, isLoading } = useAuth();
+
 const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     username: "",
@@ -29,7 +31,7 @@ const [error, setError] = useState("");
       formData.username,
       formData.password
     );
-   
+    navigate("/Names");
   } catch (error) {
 
     setError(

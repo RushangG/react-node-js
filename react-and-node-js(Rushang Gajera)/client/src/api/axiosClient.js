@@ -1,8 +1,7 @@
 
 import axios from 'axios';
-
-
 const BASE_URL = "http://localhost:4000/api";
+
 const apiClient = axios.create({
     baseURL: BASE_URL,
     withCredentials: true
@@ -11,19 +10,24 @@ const apiClient = axios.create({
 let accessToken = null;
 let refreshToken = localStorage.getItem("refreshToken") || null;
 
-
 export function setAccessToken (token)  {
   accessToken = token;
 };
 
 export function getAccessToken() {
+      console.log("getAccestoken response:", accessToken);
+
   return accessToken;
 };
 
-export function setTokens(accessToken, refreshToken) {
+export function getRefreshToken() {
+  return refreshToken;
+}
 
-    accessToken = accessToken;
-    refreshToken = refreshToken;
+export function setTokens(newAccessToken, newRefreshToken) {
+  console.log("setTokens response:", newAccessToken, newRefreshToken);
+    accessToken = newAccessToken;
+    refreshToken = newRefreshToken;
     if(refreshToken) {
         localStorage.setItem("refreshToken", refreshToken);
     }
@@ -38,16 +42,17 @@ export function clearTokens() {
     localStorage.removeItem("refreshToken");
 }
 
-apiClient.interceptors.request.use(function
-    (config) {
-    let token = JSON.parse(localStorage.getItem("token"));
-    console.log(token);
-    let accessToken = token.accessToken;
-
-    config.headers.Authorization = `Bearer ${accessToken}`
+apiClient.interceptors.request.use(
+    (config) => {
+    
+    let accessToken = getAccessToken();
+    
+        config.headers.Authorization = `Bearer ${accessToken}`;
+    
+    
     return config;
-},
-    function (errr) {
+    },
+    (error) =>   {
         return Promise.reject(error);
     }
 );
@@ -60,12 +65,9 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config;
 
     if (
-      error.response?.status === 401 &&
-      !originalRequest._retry
-    ) {
+      error.response?.status === 401 && !originalRequest._retry ) {
         // stop the infinite loop of retrying the request of 401 to refresh token.
-  
-      originalRequest._retry = true;
+        originalRequest._retry = true;
 
       try {
 
@@ -74,24 +76,20 @@ apiClient.interceptors.response.use(
           {
             refreshToken: getRefreshToken(),
           }
-        );
+        ); 
 
-        const newAccessToken =
-          response.data.accessToken;
+        const newAccessToken = response.data.accessToken;
 
         setAccessToken(newAccessToken);
 
-        originalRequest.headers.Authorization =
-          `Bearer ${newAccessToken}`;
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
-        return axiosClient(originalRequest);
+        return apiClient(originalRequest);
 
       } catch (refreshError) {
 
         clearTokens();
-
         window.location.href = "/login";
-
         return Promise.reject(refreshError);
       }
     }

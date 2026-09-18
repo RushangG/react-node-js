@@ -7,3 +7,9 @@ export async function getName() {
 
     return data;
 }
+
+
+export async function saveName(nameData) {
+    let data = await apiClient.post('/name', nameData);
+    return data;
+}

@@ -15,6 +15,7 @@ import Home from './Home.jsx';
 import About from './About.jsx';
 import Layout from './layout.jsx';
 import Login from './pages/Login.jsx'
+import ProtectedRoute from './component/ProtectedRoute.jsx'
 
 import {
   createBrowserRouter,
@@ -35,18 +36,24 @@ const router = createBrowserRouter([
         path: "/",
         element:<FirstPage />
       },
+      { 
+         element: <ProtectedRoute />,
+         children: [
+              {
+            path: "/Names",
+            element: <Name />,
+          },
+         ],
+      },
       {
-        path: "Home",
+        path: "Home", 
         element: <Home/>
       },
       {
         path: "About",
         element: <About/>
       },
-      {
-        path: "/Names",
-        element: <Name />,
-      },
+     
       {
         path: "CharacterCount",
         element : <CharacterCount/>

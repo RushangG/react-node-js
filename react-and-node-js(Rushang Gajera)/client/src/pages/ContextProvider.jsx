@@ -14,6 +14,10 @@ export default function ContextProvider({ children }) {
   const [isLoading, setIsLoading] = useState(false);
   const [accessToken, setAccessToken] = useState(null);
 
+
+
+
+  
   async function Login(username, password) {
     setIsLoading(true);
     try {
@@ -21,16 +25,15 @@ export default function ContextProvider({ children }) {
         username,
         password
       );
-      console.log("Login response:", data);
-      setUser(data.user);
+      console.log("Login response:", data)
+
+
+      setUser(data.payload);
       setTokens(
         data.accessToken,
         data.refreshToken
       );
-
-      setAccessToken(
-        data.accessToken
-      );
+      setAccessToken(data.accessToken);
 
       setIsAuth(true);
       return data;
@@ -46,8 +49,8 @@ export default function ContextProvider({ children }) {
   function Logout() {
     setUser(null);
     setIsAuth(false);
-    setAccessToken(null);
     clearTokens();
+    setAccessToken(null);
 
   }
 
@@ -57,8 +60,8 @@ export default function ContextProvider({ children }) {
       value={{
         user,
         isAuth,
-        accessToken,
         isLoading,
+        accessToken,
         Login,
         Logout,
       }}
