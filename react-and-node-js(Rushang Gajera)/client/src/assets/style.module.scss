@@ -1,0 +1,17 @@
+$myColor : red;
+
+.aboutPage {
+    color: $myColor;
+    font-size: 30px;
+
+    h1 {
+        color: blue;
+    }
+}
+
+
+.errorPage {
+    color: red;
+    font-size: 30px;
+
+}

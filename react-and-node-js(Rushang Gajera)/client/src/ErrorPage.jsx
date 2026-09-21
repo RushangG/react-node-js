@@ -1,10 +1,9 @@
-export default function ErrorPage(){
-    
+import styles from "../src/assets/style.module.scss";
 
-    return(
-        <>
-            <h1> Page Not Found 404 </h1>
-         
-        </>
-    )
+export default function ErrorPage() {
+  return (
+    <>
+      <h1 className={styles.errorPage}> Page Not Found 404 </h1>
+    </>
+  );
 }

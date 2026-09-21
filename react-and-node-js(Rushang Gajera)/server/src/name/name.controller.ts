@@ -24,11 +24,11 @@ export class NameController {
 
   @Post()
   create(@Body() createNameDto: CreateNameDto, @Req() req: any) {
-    if (!createNameDto.name || !createNameDto.email || !createNameDto.course) {
-      throw new BadRequestException(
-        `name , email , or course is missing from the request body`,
-      );
-    }
+    // if (!createNameDto.name || !createNameDto.email || !createNameDto.course) {
+    //   throw new BadRequestException(
+    //     `name , email , or course is missing from the request body`,
+    //   );
+    // }
 
     let userId = req.user.userId;
 
@@ -36,10 +36,15 @@ export class NameController {
   }
 
   @Get()
-  @Roles('admin')
   findAll(@Req() req: any) {
     let userId = req.user.userId;
     return this.nameService.findAll(userId);
+  }
+
+  @Get('admin')
+  @Roles('admin')
+  adminFindAll() {
+    return this.nameService.adminFindAll();
   }
 
   @Get(':id')
@@ -60,6 +65,7 @@ export class NameController {
   }
 
   @Delete(':id')
+  @Roles('admin')
   remove(@Param('id') id: string) {
     return this.nameService.remove(+id);
   }

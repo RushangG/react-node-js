@@ -51,6 +51,22 @@ export class NameService {
     // return this.Names;
   }
 
+  adminFindAll() {
+    let names = this.nameRepo.find({
+      relations: {
+        user_id: true,
+      },
+
+      // select: {
+      //   user_id: {
+      //     username: true,
+      //   },
+      // },
+    });
+
+    return names;
+  }
+
   async findOne(id: number, userId: number) {
     let name = await this.nameRepo.findOne({
       where: {

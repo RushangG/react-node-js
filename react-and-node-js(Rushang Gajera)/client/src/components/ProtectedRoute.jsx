@@ -9,20 +9,18 @@ const ProtectedRoute = () => {
     return <Navigate to="/login" replace />;
   }
 
-  let decodedToken = null; 
+  let decodedToken = null;
 
   try {
     decodedToken = jwtDecode(accessToken);
     if(decodedToken.exp * 1000 < Date.now()) {
       return <Navigate to="/login" replace />;
     }
-  }
-  catch (error) {
+  } catch (error) {
     console.error("Error decoding token:", error);
     return <Navigate to="/login" replace />;
   }
 
-  
   return <Outlet />;
 };
 

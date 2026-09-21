@@ -13,3 +13,10 @@ export async function saveName(nameData) {
     let data = await apiClient.post('/name', nameData);
     return data;
 }
+
+
+export async function getAdminNames() {
+    let res = await apiClient.get('/name/admin');
+
+    return res.data;
+}
