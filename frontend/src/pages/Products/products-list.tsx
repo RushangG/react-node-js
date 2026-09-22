@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProductsByUserId, deleteProduct } from "../../Apis/products-api";
 import { useAuth } from "../../components/ContextProvider";
+import { gql } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 
 export default function ProductsList() {
   const navigate = useNavigate();
@@ -9,6 +11,26 @@ export default function ProductsList() {
   const [products, setProducts] = useState({});
   const { user } = useAuth();
   const userId = user?.id;
+
+  const getCountry = gql`
+    query Query {
+      country(code: "IN") {
+        name
+        native
+        emoji
+        currency
+        languages {
+          code
+          name
+        }
+      }
+    }
+  `;
+  const { loading, error, data } = useQuery(getCountry);
+
+  console.log("data", data);
+  console.log("loading", loading);
+  console.log("error", error);
 
   useEffect(() => {
     fetchProducts();

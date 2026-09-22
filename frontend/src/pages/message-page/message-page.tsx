@@ -41,7 +41,7 @@ export default function MessagePage() {
   }
 
   return (
-    <div className="flex flex-col items-center  justify-center h-screen">
+    <div className="flex flex-col items-center justify-center h-screen">
       <h1 className="text-4xl font-bold absolute top-40 left-10">
         Message Page
       </h1>
