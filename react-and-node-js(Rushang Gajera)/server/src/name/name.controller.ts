@@ -24,11 +24,7 @@ export class NameController {
 
   @Post()
   create(@Body() createNameDto: CreateNameDto, @Req() req: any) {
-    // if (!createNameDto.name || !createNameDto.email || !createNameDto.course) {
-    //   throw new BadRequestException(
-    //     `name , email , or course is missing from the request body`,
-    //   );
-    // }
+  
 
     let userId = req.user.userId;
 

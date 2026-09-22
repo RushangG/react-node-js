@@ -17,14 +17,20 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.useGlobalPipes(
     new ValidationPipe({
-      exceptionFactory: (errors: ValidationError[]) => {
-        return new BadRequestException(
-          errors.map((error) => ({
-            field: error.property,
-            error: Object.values(error.constraints || {}).join(', '),
-          })),
-        );
-      },
+      whitelist: true,
+      
+      exceptionFactory: (errors) => {
+      const formattedErrors: Record<string, string> = {};
+
+      for (const error of errors) {
+        formattedErrors[error.property] =
+          Object.values(error.constraints ?? {})[0];
+      }
+
+      return new BadRequestException({
+        errors: formattedErrors,
+      });
+    },
     }),
   );
   app.useGlobalFilters(new HttpExceptionFilter());

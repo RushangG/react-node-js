@@ -15,6 +15,8 @@ import { AppDataSource } from './data-source';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core/constants.js';
 
 @Module({
   imports: [
@@ -23,13 +25,27 @@ import { PassportModule } from '@nestjs/passport';
     PassportModule.register({
       defaultStrategy: 'jwt',
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 5,
+      },
+    ]),
+     
     NameModule,
     MessageModule,
     UsersModule,
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,
+
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+   
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
