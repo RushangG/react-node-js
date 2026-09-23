@@ -25,6 +25,10 @@ export default function LayoutPage() {
           <Link to="/messagePage" className="mr-4">
             Message
           </Link>
+
+          <Link to="/customer-list" className="mr-4">
+            Customer List
+          </Link>
         </nav>
       </div>
     );

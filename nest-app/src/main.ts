@@ -22,8 +22,8 @@ async function bootstrap() {
   // app.useGlobalFilters(new HttpExceptionFilter());
   app.use(cookieParser());
 
-  // safe backend details with helmet
-  app.use(helmet());
+  // // safe backend details with helmet
+  // app.use(helmet());
 
   // app.useGlobalPipes(
   //   new ValidationPipe({

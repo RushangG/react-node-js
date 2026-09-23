@@ -12,21 +12,18 @@ export default function ProductsList() {
   const { user } = useAuth();
   const userId = user?.id;
 
-  const getCountry = gql`
-    query Query {
-      country(code: "IN") {
+  const getCustomer = gql`
+    query CustomerAll {
+      customerAll {
+        id
         name
-        native
-        emoji
-        currency
-        languages {
-          code
-          name
-        }
+        email
+        phone
+        company_id
       }
     }
   `;
-  const { loading, error, data } = useQuery(getCountry);
+  const { loading, error, data } = useQuery(getCustomer);
 
   console.log("data", data);
   console.log("loading", loading);

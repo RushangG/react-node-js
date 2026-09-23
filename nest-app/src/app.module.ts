@@ -28,7 +28,10 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { FileUploadModule } from './modules/file-upload/file-upload.module';
 import { UsersRolesModule } from './modules/users-roles/users-roles.module';
 import { AuthUserSessionModule } from './modules/auth-user-session/auth-user-session.module';
-import { CustomersModule } from './modules/customers/customers.module';
+import { CustomerModule } from './modules/customer/customer.module';
+
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 @Module({
   imports: [
@@ -58,9 +61,13 @@ import { CustomersModule } from './modules/customers/customers.module';
       },
     ]),
 
-    CustomersModule,
+    CustomerModule,
 
-  
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: true,
+      playground: true,
+    }),
 
     // ThrottlerModule.forRoot({
     //   throttlers: [

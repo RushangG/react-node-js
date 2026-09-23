@@ -8,7 +8,7 @@ import { AppDataSource } from '../../data-source';
 
 @Injectable()
 export class ProductsService {
-  constructor( 
+  constructor(
     @InjectRepository(Product)
     private readonly productRepo: Repository<Product>,
   ) {}
