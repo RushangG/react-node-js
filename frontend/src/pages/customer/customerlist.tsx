@@ -1,37 +1,40 @@
-import { useState, useEffect } from "react";
-import { useQuery, useMutation, useLazyQuery } from "@apollo/client/react";
+import { useQuery, useMutation } from "@apollo/client/react";
+
 import {
   GET_CUSTOMER,
   DELETE_CUSTOMER,
 } from "../../Apis/graphql-api/customer-api";
-type Customer = {
+import { useNavigate } from "react-router-dom";
+
+interface Customer {
   id: number;
   name: string;
   email: string;
   phone: string;
   company_id?: number;
-};
+}
 
 interface CustomerData {
   customerAll: Customer[];
 }
 
 export default function CustomerList() {
-  //   const { data, loading, error, refetch } = useQuery(getCustomerGql) as {
-  //     data: CustomerData;
-  //     loading: boolean;
-  //     error: any;
-  //     refetch: () => void;
-  //   };
+  const navigate = useNavigate();
 
-  const { data, loading, error } = useQuery(GET_CUSTOMER);
+  const { data, loading, error } = useQuery(GET_CUSTOMER, {
+    fetchPolicy: "network-only",
+  }) as {
+    data: CustomerData;
+    loading: boolean;
+    error: Error;
+  };
+
 
   const [deleteCustomer, { loading: deleting }] = useMutation(DELETE_CUSTOMER, {
-    refetchQueries: [{ query: GET_CUSTOMER }],
     onError: (err) => console.error("Error deleting customer:", err),
   });
 
-  if (loading) {
+  if (loading && !data) {
     return <p>Loading customers...</p>;
   }
 
@@ -41,19 +44,30 @@ export default function CustomerList() {
 
   async function handleDeleteCustomer(id: number) {
     try {
-      let data = await deleteCustomer({
+      let result = await deleteCustomer({
         variables: { id: Number(id) },
+        refetchQueries: [{ query: GET_CUSTOMER }],
+        awaitRefetchQueries: true,
       });
-      console.log("delete customer data", data);
+      console.log("delete customer data", result);
     } catch (err) {
       console.error("Mutation failed", err);
     }
+  }
+
+  async function handleEditCustomer(id: number) {
+    navigate(`/customer-form`, { state: { customerId: id } });
   }
 
   return (
     <>
       <div>
         <h1>Customer List</h1>
+        <span>
+          <button onClick={() => navigate("/customer-form")}>
+            Add Customer
+          </button>
+        </span>
 
         <table>
           <thead>
@@ -75,11 +89,14 @@ export default function CustomerList() {
                 <td>{customer.phone}</td>
                 <td>{customer.company_id}</td>
                 <td>
+                  <button onClick={() => handleEditCustomer(customer.id)}>
+                    edit
+                  </button>
                   <button
                     disabled={deleting}
                     onClick={() => handleDeleteCustomer(customer.id)}
                   >
-                    {deleting ? "Deleting..." : "Delete"}
+                    Delete
                   </button>
                 </td>
               </tr>

@@ -10,6 +10,8 @@ import MessagePage from "./pages/message-page/message-page";
 import ProtectedRoutes from "./components/protectedRoutes";
 import LayoutPage from "./components/LayoutPage";
 import CustomerList from "./pages/customer/customerlist";
+import CustomerForm from "./pages/customer/customerForm";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -62,6 +64,10 @@ const router = createBrowserRouter([
               {
                 path: "/customer-list",
                 element: <CustomerList />,
+              },
+              {
+                path: "/customer-form",
+                element: <CustomerForm />,
               },
             ],
           },
