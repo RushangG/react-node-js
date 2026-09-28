@@ -12,7 +12,7 @@ import { AuthUserSessionService } from '../modules/auth-user-session/auth-user-s
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor (
+  constructor(
     private reflector: Reflector,
     private authUserSessionService: AuthUserSessionService,
   ) {}
@@ -38,7 +38,9 @@ export class JwtAuthGuard implements CanActivate {
 
     const req = context.switchToHttp().getRequest();
 
-    const authHeader = req.headers['authorization'];
+    let authHeader: string = '';
+
+    authHeader = req.headers['authorization'];
 
     if (!authHeader) {
       throw new UnauthorizedException('Authorization header is missing');

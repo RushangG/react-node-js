@@ -4,8 +4,9 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  ManyToOne,
 } from 'typeorm';
-//Customers: id, name, email, phone, company_id
+import { Company } from '../../companies/entities/company.entity';
 
 @Entity()
 @ObjectType()
@@ -26,9 +27,9 @@ export class Customer {
   @Field({ nullable: true })
   phone?: string;
 
-  @Column({ nullable: true })
-  @Field(() => Int, { nullable: true })
-  company_id?: number;
+  @ManyToOne(() => Company, (company) => company.Customer, { nullable: true })
+  @Field(() => Company, { nullable: true })
+  company: Company;
 
   @CreateDateColumn({
     type: 'timestamp with time zone',

@@ -6,6 +6,7 @@ import { Roles } from './modules/roles/entities/roles.entity';
 import { UsersRoles } from './modules/users-roles/entities/users-roles.entity';
 import { AuthUserSession } from './modules/auth-user-session/entities/auth-user-session.entity';
 import { Customer } from './modules/customer/entities/customer.entity';
+import { Company } from './modules/companies/entities/company.entity';
 config(); // .env variables loaded.
 
 export const AppDataSource = new DataSource({
@@ -16,7 +17,15 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [Product, Users, Roles, UsersRoles, AuthUserSession, Customer],
+  entities: [
+    Product,
+    Users,
+    Roles,
+    UsersRoles,
+    AuthUserSession,
+    Customer,
+    Company,
+  ],
   synchronize: true,
   logging: false, // logs:  query and error logs
   migrations: ['src/migrations/*.ts'], //  migration files

@@ -1,4 +1,5 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
+import { Company } from 'src/modules/companies/entities/company.entity';
 
 @InputType()
 export class CreateCustomerInput {
@@ -11,6 +12,6 @@ export class CreateCustomerInput {
   @Field({ nullable: true })
   phone?: string;
 
-  @Field(() => Int)
-  company_id: number;
+  @Field(() => Int, { nullable: true })
+  company: Company;
 }

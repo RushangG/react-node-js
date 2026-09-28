@@ -13,7 +13,12 @@ interface CustomerData {
     name: string;
     email: string;
     phone: string;
-    company_id: number;
+    company: {
+      id: number;
+      name: string;
+      address: string;
+      industry: string;
+    };
   };
 }
 
@@ -25,7 +30,12 @@ export default function CustomerForm() {
 
   console.log("customerId", customerId);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    email: string;
+    phone: string;
+    company_id: string;
+  }>({
     name: "",
     email: "",
     phone: "",
@@ -45,7 +55,7 @@ export default function CustomerForm() {
         name: data.customer.name,
         email: data.customer.email,
         phone: data.customer.phone,
-        company_id: data.customer.company_id.toString(),
+        company_id: data.customer.company.id.toString(),
       });
     }
   }, [data]);
@@ -71,7 +81,7 @@ export default function CustomerForm() {
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
-          company_id: parseInt(formData.company_id),
+          company: parseInt(formData.company_id),
         },
       });
 

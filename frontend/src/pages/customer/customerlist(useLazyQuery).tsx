@@ -1,10 +1,11 @@
-import { useQuery, useMutation } from "@apollo/client/react";
-import "../../index.css";
+import { useQuery, useLazyQuery, useMutation } from "@apollo/client/react";
+
 import {
   GET_CUSTOMER,
   DELETE_CUSTOMER,
 } from "../../Apis/graphql-api/customer-api";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 interface Customer {
   id: number;
@@ -26,14 +27,17 @@ interface CustomerData {
 export default function CustomerList() {
   const navigate = useNavigate();
 
-  const { data, loading, error } = useQuery(GET_CUSTOMER, {
-    fetchPolicy: "cache-and-network",
-  }) as {
-    data: CustomerData;
-    loading: boolean;
-    error: Error;
-  };
-  console.log("customer data", data);
+  const [fetchCustomers, { data, loading, error }] = useLazyQuery(
+    GET_CUSTOMER,
+    {
+      fetchPolicy: "network-only",
+    },
+  ) as [() => void, { data: CustomerData; loading: boolean; error: Error }];
+
+  useEffect(() => {
+    console.log("customer useEffect data", data);
+    fetchCustomers();
+  }, [fetchCustomers]);
 
   const [deleteCustomer, { loading: deleting }] = useMutation(DELETE_CUSTOMER, {
     onError: (err) => console.error("Error deleting customer:", err),
@@ -48,17 +52,16 @@ export default function CustomerList() {
   }
 
   async function handleDeleteCustomer(id: number) {
-    if (window.confirm("Are you sure you want to delete this customer?")) {
-      try {
-        let result = await deleteCustomer({
-          variables: { id: Number(id) },
-          refetchQueries: [{ query: GET_CUSTOMER }],
-          awaitRefetchQueries: true,
-        });
-        console.log("Delete result:", result);
-      } catch (err) {
-        console.error("Mutation failed", err);
-      }
+    try {
+      let result = await deleteCustomer({
+        variables: { id: Number(id) },
+        fetchPolicy: "network-only",
+        refetchQueries: [{ query: GET_CUSTOMER }],
+      });
+      console.log("delete customer data", result);
+      console.log("inside delete customer data", data);
+    } catch (err) {
+      console.error("Mutation failed", err);
     }
   }
 
@@ -70,6 +73,12 @@ export default function CustomerList() {
     <>
       <div>
         <h1 className="text-2xl font-bold mb-4">Customer List</h1>
+        <button
+          onClick={() => fetchCustomers()}
+          className="border bg-green-200 rounded p-2 text-black ml-5"
+        >
+          fetch Customers
+        </button>
         <span>
           <button
             onClick={() => navigate("/customer-form")}
@@ -79,10 +88,10 @@ export default function CustomerList() {
           </button>
         </span>
 
-        {data.customerAll.length === 0 ? (
+        {data?.customerAll.length === 0 ? (
           <p className="m-6">No customers found.</p>
         ) : (
-          <table className="table-auto border-collapse border">
+          <table className="table-auto border-collapse border border-gray-300 m-6 w-11/12">
             <thead>
               <tr>
                 <th>ID</th>
@@ -93,7 +102,7 @@ export default function CustomerList() {
                 <th>Actions</th>
               </tr>
             </thead>
-            <tbody className="border border-black-300">
+            <tbody>
               {data?.customerAll.map((customer: Customer) => (
                 <tr key={customer.id}>
                   <td>{customer.id}</td>
@@ -102,14 +111,10 @@ export default function CustomerList() {
                   <td>{customer.phone}</td>
                   <td>{customer.company.name}</td>
                   <td>
-                    <button
-                      className="border p-1 mr-2"
-                      onClick={() => handleEditCustomer(customer.id)}
-                    >
+                    <button onClick={() => handleEditCustomer(customer.id)}>
                       edit
                     </button>
                     <button
-                      className="border p-1"
                       disabled={deleting}
                       onClick={() => handleDeleteCustomer(customer.id)}
                     >

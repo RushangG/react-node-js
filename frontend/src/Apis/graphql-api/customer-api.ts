@@ -7,7 +7,12 @@ export const GET_CUSTOMER = gql`
       name
       email
       phone
-      company_id
+      company {
+        id
+        name
+        address
+        industry
+      }
     }
   }
 `;
@@ -19,20 +24,19 @@ export const GET_CUSTOMER_BY_ID = gql`
       name
       email
       phone
-      company_id
+      company {
+        id
+        name
+        address
+        industry
+      }
     }
   }
 `;
 
 export const DELETE_CUSTOMER = gql`
   mutation RemoveCustomer($id: Int!) {
-    removeCustomer(id: $id) {
-      id
-      name
-      email
-      phone
-      company_id
-    }
+    removeCustomer(id: $id)
   }
 `;
 
@@ -48,14 +52,13 @@ export const ADD_CUSTOMER = gql`
         name: $name
         email: $email
         phone: $phone
-        company_id: $company_id
+        company: $company_id
       }
     ) {
       id
       name
       email
       phone
-      company_id
     }
   }
 `;
@@ -66,7 +69,7 @@ export const UPDATE_CUSTOMER = gql`
     $name: String!
     $email: String!
     $phone: String!
-    $company_id: Int!
+    $company: Int!
   ) {
     updateCustomer(
       id: $id
@@ -74,14 +77,13 @@ export const UPDATE_CUSTOMER = gql`
         name: $name
         email: $email
         phone: $phone
-        company_id: $company_id
+        company: $company
       }
     ) {
       id
       name
       email
       phone
-      company_id
     }
   }
 `;

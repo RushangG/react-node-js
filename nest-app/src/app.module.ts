@@ -32,6 +32,7 @@ import { CustomerModule } from './modules/customer/customer.module';
 
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { CompaniesModule } from './modules/companies/companies.module';
 
 @Module({
   imports: [
@@ -68,6 +69,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
       autoSchemaFile: true,
       playground: true,
     }),
+
+    CompaniesModule,
 
     // ThrottlerModule.forRoot({
     //   throttlers: [

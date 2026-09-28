@@ -1,2 +1,8 @@
 @import "tailwindcss";
 
+td {
+   border: 0caps;
+    padding: 0.5rem;
+
+}
+
