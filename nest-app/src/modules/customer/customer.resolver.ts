@@ -17,7 +17,7 @@ import { Public } from 'src/auth/public.decorator';
 import { Company } from '../companies/entities/company.entity';
 import { CompaniesService } from '../companies/companies.service';
 
-@Public()
+// @Public()
 @Resolver(() => Customer)
 export class CustomerResolver {
   constructor(

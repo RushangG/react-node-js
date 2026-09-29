@@ -5,6 +5,9 @@ import {
   DELETE_CUSTOMER,
 } from "../../Apis/graphql-api/customer-api";
 import { useNavigate } from "react-router-dom";
+import { clientGql } from "../../Apis/graphql-api/graphql-client";
+import { gql } from "@apollo/client";
+import { useEffect } from "react";
 
 interface Customer {
   id: number;
@@ -25,6 +28,36 @@ interface CustomerData {
 
 export default function CustomerList() {
   const navigate = useNavigate();
+
+  async function fetchCompanies() {
+    const result = (await clientGql.query({
+      query: gql`
+        query companiesAll {
+          companies {
+            id
+            name
+            address
+            industry
+          }
+        }
+      `,
+    })) as {
+      data: {
+        companies: {
+          id: number;
+          name: string;
+          address: string;
+          industry: string;
+        }[];
+      };
+    };
+
+    console.log("companies result", result.data.companies);
+  }
+
+  useEffect(() => {
+    fetchCompanies();
+  }, []);
 
   const { data, loading, error } = useQuery(GET_CUSTOMER, {
     fetchPolicy: "cache-and-network",

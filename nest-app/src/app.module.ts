@@ -68,6 +68,7 @@ import { CompaniesModule } from './modules/companies/companies.module';
       driver: ApolloDriver,
       autoSchemaFile: true,
       playground: true,
+      
     }),
 
     CompaniesModule,

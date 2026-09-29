@@ -9,7 +9,7 @@ import { Reflector } from '@nestjs/core'; // use for reading metadata(public dec
 import { JwtService } from '@nestjs/jwt';
 import { IS_PUBLIC_KEY } from './public.decorator';
 import { AuthUserSessionService } from '../modules/auth-user-session/auth-user-session.service';
-
+import { GqlExecutionContext } from '@nestjs/graphql';
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(
@@ -36,17 +36,20 @@ export class JwtAuthGuard implements CanActivate {
       return true;
     }
 
-    const req = context.switchToHttp().getRequest();
+    let token = '';
+    let req: any = {};
+    if (context.getType().toString() === 'graphql') {
+      const ctx = GqlExecutionContext.create(context);
+      req = ctx.getContext().req;
+    } else {
+      req = context.switchToHttp().getRequest();
+    }
 
-    let authHeader: string = '';
-
-    authHeader = req.headers['authorization'];
-
+    const authHeader = req.headers['authorization'];
     if (!authHeader) {
       throw new UnauthorizedException('Authorization header is missing');
     }
-
-    const token = authHeader.split(' ')[1];
+    token = authHeader.split(' ')[1];
 
     //cookie based authentication
     // console.log('authHeader:', authHeader);
