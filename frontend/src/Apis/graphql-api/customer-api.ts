@@ -1,6 +1,23 @@
-import { gql } from "@apollo/client";
+import { gql, type TypedDocumentNode } from "@apollo/client";
 
-export const GET_CUSTOMER = gql`
+export interface customerAllQuery {
+  customerAll: {
+    __typename: "Customer";
+    id: number;
+    name: string;
+    email: string;
+    phone: string;
+    company: {
+      __typename: "Company";
+      id: number;
+      name: string;
+      address: string;
+      industry: string;
+    };
+  }[];
+}
+
+export const GET_CUSTOMER: TypedDocumentNode<customerAllQuery> = gql`
   query CustomerAll {
     customerAll {
       id

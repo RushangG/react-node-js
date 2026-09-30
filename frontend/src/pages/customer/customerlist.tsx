@@ -9,23 +9,6 @@ import { clientGql } from "../../Apis/graphql-api/graphql-client";
 import { gql } from "@apollo/client";
 import { useEffect } from "react";
 
-interface Customer {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  company: {
-    id: number;
-    name: string;
-    address: string;
-    industry: string;
-  };
-}
-
-interface CustomerData {
-  customerAll: Customer[];
-}
-
 export default function CustomerList() {
   const navigate = useNavigate();
 
@@ -61,11 +44,7 @@ export default function CustomerList() {
 
   const { data, loading, error } = useQuery(GET_CUSTOMER, {
     fetchPolicy: "cache-and-network",
-  }) as {
-    data: CustomerData;
-    loading: boolean;
-    error: Error;
-  };
+  });
   console.log("customer data", data);
 
   const [deleteCustomer, { loading: deleting }] = useMutation(DELETE_CUSTOMER, {
@@ -106,13 +85,13 @@ export default function CustomerList() {
         <span>
           <button
             onClick={() => navigate("/customer-form")}
-            className="border bg-green-200 rounded p-2 text-black ml-5"
+            className="border bg-green-200 rounded p-2 text-black ml-5 cursor-pointer hover:bg-green-400"
           >
             Add Customer
           </button>
         </span>
 
-        {data.customerAll.length === 0 ? (
+        {data?.customerAll.length === 0 ? (
           <p className="m-6">No customers found.</p>
         ) : (
           <table className="table-auto border-collapse border">
@@ -127,7 +106,7 @@ export default function CustomerList() {
               </tr>
             </thead>
             <tbody className="border border-black-300">
-              {data?.customerAll.map((customer: Customer) => (
+              {data?.customerAll.map((customer) => (
                 <tr key={customer.id}>
                   <td>{customer.id}</td>
                   <td>{customer.name}</td>

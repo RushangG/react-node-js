@@ -16,12 +16,24 @@ export class CustomerService {
     return this.customerRepo.save(customer);
   }
 
-  async findAll() {
-    return await this.customerRepo.find({
-      relations: {
-        company: true,
-      },
-    });
+  async findAll(search?: string) {
+    let query = this.customerRepo.createQueryBuilder('customer');
+
+    if (search) {
+      query.andWhere(
+        'customer.name ILIKE :search OR customer.email ILIKE :search',
+        { search: `%${search}%` },
+      );
+    }
+    query.leftJoinAndSelect('customer.company', 'company');
+    let customers = await query.getMany();
+    return customers;
+
+    // return await this.customerRepo.find({
+    //   relations: {
+    //     company: true,
+    //   },
+    // });
   }
 
   async findOne(id: number) {

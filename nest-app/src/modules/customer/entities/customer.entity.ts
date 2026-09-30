@@ -31,6 +31,7 @@ export class Customer {
   @Field(() => Company, { nullable: true })
   company: Company;
 
+
   @CreateDateColumn({
     type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',

@@ -33,8 +33,8 @@ export class CustomerResolver {
   }
 
   @Query(() => [Customer], { name: 'customerAll' })
-  async findAll() {
-    let customers = await this.customerService.findAll();
+  async findAll(@Args('search', { nullable: true }) search?: string) {
+    let customers = await this.customerService.findAll(search);
     return customers;
   }
 

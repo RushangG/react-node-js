@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { IS_PUBLIC_KEY } from './public.decorator';
 import { AuthUserSessionService } from '../modules/auth-user-session/auth-user-session.service';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import { GraphQLError } from 'node_modules/graphql/error/GraphQLError';
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(
@@ -74,7 +75,6 @@ export class JwtAuthGuard implements CanActivate {
           'Invalid access token not found in database',
         );
       }
-
       // console.log('user', req.user);
       return true;
     } catch (error) {

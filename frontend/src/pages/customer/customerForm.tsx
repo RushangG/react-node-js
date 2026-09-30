@@ -124,7 +124,7 @@ export default function CustomerForm() {
 
   return (
     <>
-      <div className="flex flex-col items-center m-4  min-h-screen bg-gray-100">
+      <div className="flex flex-col items-center m-4 min-h-screen bg-gray-100">
         <h1 className="text-2xl font-bold mb-4">Customer Form</h1>
 
         <form onSubmit={handleSubmit}>
@@ -164,17 +164,24 @@ export default function CustomerForm() {
               className="border border-gray-300 rounded px-2 py-1"
             />
           </div>
+
           <div>
-            <label htmlFor="company_id">Company ID:</label>
-            <input
-              type="text"
-              id="company_id"
+            <label htmlFor="company_name">Company Name:</label>
+            <select
+              id="company_name"
+              name="company_name"
               value={formData.company_id}
-              name="company_id"
-              onChange={handleChange}
-              required
+              onChange={(e) =>
+                setFormData({ ...formData, company_id: e.target.value })
+              }
               className="border border-gray-300 rounded px-2 py-1"
-            />
+              required
+            >
+              <option value="">Select a company</option>
+              <option value="1">Company 1</option>
+              <option value="3">Company 2</option>
+              <option value="4">Company 3</option>
+            </select>
           </div>
 
           <div>
