@@ -7,7 +7,7 @@ import { ApolloProvider } from "@apollo/client/react";
 import { clientGql } from "./Apis/graphql-api/graphql-client.ts";
 
 createRoot(document.getElementById("root")!).render(
-  <ApolloProvider client={clientGql}>
+  <ApolloProvider  client={clientGql}>
     <StrictMode>
       <ContextProvider>
         <App />
